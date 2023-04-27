@@ -18,8 +18,8 @@ from django.urls import path
 
 
 # 模块的import
-from Seller import views
+from Seller.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('InformationView/', InformationView ),
 ]

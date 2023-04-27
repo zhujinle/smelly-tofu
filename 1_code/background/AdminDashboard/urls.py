@@ -18,7 +18,7 @@ from django.urls import path
 
 
 # 模块的import
-from Delivery_Staff.views import *
+from AdminDashboard.views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),

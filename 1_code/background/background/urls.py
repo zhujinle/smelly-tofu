@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/V1/Seller/', include('Seller.urls')),
     path('api/V1/Delivery_Staff/', include('Delivery_Staff.urls')),
-    path('api/V1/Dashboard/', include('Dashboard.urls')),
+    path('api/V1/Dashboard/', include('AdminDashboard.urls')),
     path('api/V1/Customer/', include('Customer.urls')),
-    path('api/V1/Admin/', include('Admin.urls')),
+    path('api/V1/Admin/', include('AdminDashboard.urls')),
 ]
