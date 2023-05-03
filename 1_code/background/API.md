@@ -77,6 +77,10 @@ wx.request({
 
 - [ ] `GET`GetSessionToken 获取一个新的Session Token
 
+  例如：http://127.0.0.1:8000/api/V1/GetSessionToken?DeviceID=123232333
+
+  请注意，DeviceID至少8位，应通过函数生成
+
   输入(String)`DeviceID`
 
   输出(String)`StatusCode`/(String)`SessionToken`

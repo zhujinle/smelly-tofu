@@ -15,12 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+# from General.views import CheckSessionToken, GetSessionToken, Login
+from General.views import GetSessionToken
 
 
 # 模块的import
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
+    # path('api/V1/CheckSessionToken', CheckSessionToken),
+    path('api/V1/GetSessionToken', GetSessionToken),
+    # path('api/V1/Login', Login),
+
     path('api/V1/Seller/', include('Seller.urls')),
     path('api/V1/Delivery_Staff/', include('Delivery_Staff.urls')),
     path('api/V1/Dashboard/', include('AdminDashboard.urls')),

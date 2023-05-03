@@ -30,7 +30,7 @@ class User(models.Model):
         DeliveryStaff = 3
         Admin = 4
 
-    Type = models.IntegerField(choices=UserType, default=1)
+    Type = models.IntegerField(choices=UserType.choices, default=1)
 
     # 会员等级
     class MemberType(models.IntegerChoices):
@@ -39,15 +39,15 @@ class User(models.Model):
         Au = 3
         Diamond = 4
 
-    Member = models.IntegerField(choices=MemberType, default=1)
+    Member = models.IntegerField(choices=MemberType.choices, default=1)
     # 地址
     Address = models.CharField(max_length=100, blank=True)
     # 日金额，在用户侧定义为日消费金额，商家侧定义为日总收入，配送测定义为日收入，一日一清零
-    MoneyDaily = models.IntegerField(max_length=10, default=0)
+    MoneyDaily = models.IntegerField(default=0)
     # 金额，在用户侧定义为月消费金额，商家侧定义为月总收入，配送测定义为月收入，一月一清零
-    MoneyMonthly = models.IntegerField(max_length=10, default=0)
+    MoneyMonthly = models.IntegerField(default=0)
     # 总金额
-    MoneySum = models.IntegerField(max_length=40, default=0)
+    MoneySum = models.IntegerField(default=0)
     # 购物车
     Cart = models.JSONField()
 
@@ -56,7 +56,7 @@ class Menu(models.Model):
     # ShopID
     ShopID = models.ForeignKey('User', to_field='UID', on_delete=models.CASCADE)
     # FoodNumber
-    FoodID = models.AutoField(primary_field=True)
+    FoodID = models.AutoField(primary_key=True)
 
     # Photo
     def user_directory_path(self, filename):
@@ -88,17 +88,13 @@ class Order(models.Model):
         Wechat = 2
         Balance = 3
 
-    Payment = models.IntegerField(choices=PaymentType, blank=False)
+    Payment = models.IntegerField(choices=PaymentType.choices, blank=False)
     # 支付状态
     PayStatus = models.BooleanField(blank=False, default=False)
-    # 商店地址
-    ShopAddress = models.ForeignKey('User', to_field='Address', on_delete=models.CASCADE)
-    # 商店电话
-    ShopPhone = models.ForeignKey('User', to_field='Phone', on_delete=models.CASCADE)
-    # 配送员姓名
-    DeliveryStaffName = models.ForeignKey('User', to_field='Name', on_delete=models.CASCADE)
-    # 配送员电话
-    DeliveryStaffPhone = models.ForeignKey('User', to_field='Phone', on_delete=models.CASCADE)
+    # 商店UID
+    ShopUID = models.IntegerField(blank=False)
+    # 配送员UID
+    DeliveryStaffUID = models.IntegerField(blank=True)
 
     # 配送状态
     class DeliveryType(models.IntegerChoices):
@@ -109,7 +105,7 @@ class Order(models.Model):
         OnRoad = 4
         Done = 5
 
-    DeliveryState = models.IntegerField(choices=DeliveryType, blank=False, default=0)
+    DeliveryState = models.IntegerField(choices=DeliveryType.choices, blank=False, default=0)
     # 订单内容
     Cart = models.JSONField(blank=False)
     # 总金额
