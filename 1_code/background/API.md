@@ -69,13 +69,14 @@ wx.request({
 
 
 
-- [ ] `POST`CheckSessionToken 检查Session Token的有效性
+- [x] `POST`CheckSessionToken 检查Session Token的有效性
 
   输入(String)`DeviceID`/(String)`SessionToken`
 
   输出(String)``StatusCode`
+  > 请注意，这里会返回一个StatusCode，如果是200则表示Session Token有效，如果是401则表示Session Token无效或者过期,POST JSON传参，参数样例：{"DeviceID":"12345678","SessionToken":"TVRJek5EVTJOemd4Tmpnek1Ua3dNREV4TGpRMk1UZzVNRGM9"}
 
-- [ ] `GET`GetSessionToken 获取一个新的Session Token
+- [x] `GET`GetSessionToken 获取一个新的Session Token
 
   例如：http://127.0.0.1:8000/api/V1/GetSessionToken?DeviceID=123232333
 
@@ -85,9 +86,10 @@ wx.request({
 
   输出(String)`StatusCode`/(String)`SessionToken`
 
+
 - [ ] `POST`Login 登录，获取Secret Key
 
-  输入(String)`DeviceID`/(HASH)`UserName`/(HASH)`Password`/(String)`CAPTCHACode`(这个懒得写，默认1先)
+  输入(String)`SessionToken`(String)`DeviceID`/(String)`UserName`/(HASH)`Password`/(String)`CAPTCHACode`(这个懒得写，默认1先)
 
   输出(Int)`StatusCode`/(String)`SecretKey`/(Int)`UID`
 
