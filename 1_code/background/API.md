@@ -69,21 +69,27 @@ wx.request({
 
 
 
-- [ ] `POST`CheckSessionToken 检查Session Token的有效性
+- [x] `POST`CheckSessionToken 检查Session Token的有效性
 
   输入(String)`DeviceID`/(String)`SessionToken`
 
   输出(String)``StatusCode`
+  > 请注意，这里会返回一个StatusCode，如果是200则表示Session Token有效，如果是401则表示Session Token无效或者过期,POST JSON传参，参数样例：{"DeviceID":"12345678","SessionToken":"TVRJek5EVTJOemd4Tmpnek1Ua3dNREV4TGpRMk1UZzVNRGM9"}
 
-- [ ] `GET`GetSessionToken 获取一个新的Session Token
+- [x] `GET`GetSessionToken 获取一个新的Session Token
+
+  例如：http://127.0.0.1:8000/api/V1/GetSessionToken?DeviceID=123232333
+
+  请注意，DeviceID至少8位，应通过函数生成
 
   输入(String)`DeviceID`
 
   输出(String)`StatusCode`/(String)`SessionToken`
 
+
 - [ ] `POST`Login 登录，获取Secret Key
 
-  输入(String)`DeviceID`/(HASH)`UserName`/(HASH)`Password`/(String)`CAPTCHACode`(这个懒得写，默认1先)
+  输入(String)`SessionToken`(String)`DeviceID`/(String)`UserName`/(HASH)`Password`/(String)`CAPTCHACode`(这个懒得写，默认1先)
 
   输出(Int)`StatusCode`/(String)`SecretKey`/(Int)`UID`
 
@@ -107,11 +113,11 @@ wx.request({
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`
 
-  输出(String)StatusCode/(json)CartMenber{[Foodid1,Number1,Money1,Discount1],[Foodid2,Number2,Money2,Discount2]......[FoodidN,NumberN,MoneyN,DiscountN]}
+  输出(String)StatusCode/(json)CartMenber{[Foodid1,FoodPhotoUrl1,Number1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Number2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,NumberN,MoneyN,DiscountN]}
 
 - [ ] `POST`ModifyShoppingCart 修改购物车
 
-  输入(Int)`UID`/(String)`SessionToken`/(String)`Secret Key`/(json)CartMenber{[Foodid1,Number1,Money1,Discount1],[Foodid2,Number2,Money2,Discount2]......[FoodidN,NumberN,MoneyN,DiscountN]}
+  输入(Int)`UID`/(String)`SessionToken`/(String)`Secret Key`/(json)CartMenber{[Foodid1,FoodPhotoUrl1,Number1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Number2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,NumberN,MoneyN,DiscountN]}
 
   输出(String)StatusCode
 
@@ -131,7 +137,7 @@ wx.request({
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)OrderNumber
 
-  输出(String)`StatusCode`(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}`/(Double)`MoneySum`
+  输出(String)`StatusCode`(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(json)`CartMenber` `{[Foodid1,FoodPhotoUrl1,Number1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Number2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,NumberN,MoneyN,DiscountN]}`/(Double)`MoneySum`
 
   
 
@@ -157,11 +163,11 @@ wx.request({
 
   输入(Int)`UID`(Shop's)
 
-  输出(String)`StatusCode`(String)/(Json)`MenuList` `{[Foodid1,Money1,Discount1],[Foodid2,Money2,Discount2]......[FoodidN,MoneyN,DiscountN]}`
+  输出(String)`StatusCode`(String)/(Json)`MenuList` `{[Foodid1,FoodPhotoUrl1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,MoneyN,DiscountN]}`
 
 - [ ] `POST`ModifyMenu 菜单信息修改
 
-  输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`/(Json)`MenuList` `{[Foodid1,Money1,Discount1],[Foodid2,Money2,Discount2]......[FoodidN,MoneyN,DiscountN]}`
+  输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`/(Json)`MenuList` `{[Foodid1,FoodPhotoUrl1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Money2,Discount2]......[FoodidN,FoodPhotoUrln,MoneyN,DiscountN]}`
 
   输出(String)`StatusCode`(String)
 
@@ -193,7 +199,7 @@ wx.request({
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)OrderNumber
 
-  输出(String)`StatusCode`(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}`/(Double)`MoneySum`
+  输出(String)`StatusCode`(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`CartMenber` `{[Foodid1,FoodPhotoUrl1,Number1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Number2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,NumberN,MoneyN,DiscountN]}`/(Double)`MoneySum`
 
 ### 配送层 - DeliveryStaff
 
@@ -217,11 +223,11 @@ wx.request({
 
   输出(String)`StatusCode`/(json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}`
 
-- [ ] `POST`CheckOrder 订单信息查看
+- [ ] `POST`CheckOrder 订单信息查询
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)OrderNumber
 
-  输出(String)`StatusCode`(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}`/(Double)`MoneySum
+  输出(String)`StatusCode`(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`CartMenber` `{[Foodid1,FoodPhotoUrl1,Number1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Number2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,NumberN,MoneyN,DiscountN]}`/(Double)`MoneySum`
 
 - [ ] `POST`ModifyOrder 订单信息修改
 
@@ -261,11 +267,11 @@ wx.request({
 
   输入(Int)`TargetShopUID`
 
-  输出(String)`StatusCode`(String)/(Json)`MenuList` `{[Foodid1,Money1,Discount1],[Foodid2,Money2,Discount2]......[FoodidN,MoneyN,DiscountN]}`
+  输出(String)`StatusCode`(String)/(Json)(Json)`MenuList` `{[Foodid1,FoodPhotoUrl1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Money2,Discount2]......[FoodidN,FoodPhotoUrln,MoneyN,DiscountN]}`
 
 - [ ] ModifyMenu 菜单信息修改
 
-  输入(Int)`TargetShopUID`/(String)`SessionToken`/(String)`SecretKey`/(Json)`MenuList` `{[Foodid1,Money1,Discount1],[Foodid2,Money2,Discount2]......[FoodidN,MoneyN,DiscountN]}`
+  输入(Int)`TargetShopUID`/(String)`SessionToken`/(String)`SecretKey`/(Json)(Json)`MenuList` `{[Foodid1,FoodPhotoUrl1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Money2,Discount2]......[FoodidN,FoodPhotoUrln,MoneyN,DiscountN]}`
 
   输出(String)`StatusCode`(String)
 
@@ -275,15 +281,15 @@ wx.request({
 
   输出(String)`StatusCode`/(json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}
 
-- [ ] CheckOrder 订单信息查看
+- [ ] `POST`CheckOrder 订单信息查询
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)OrderNumber
 
-  输出(String)`StatusCode`/(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}`/(Double)`MoneySum
+  输出(String)`StatusCode`(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`CartMenber` `{[Foodid1,FoodPhotoUrl1,Number1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Number2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,NumberN,MoneyN,DiscountN]}`/(Double)`MoneySum`
 
 - [ ] ModifyOrder 订单信息修改
 
-  输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}`/(Double)`MoneySum
+  输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`CartMenber` `{[Foodid1,FoodPhotoUrl1,Number1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Number2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,NumberN,MoneyN,DiscountN]}`/(Double)`MoneySum
 
   输出(String)`StatusCode`
 
