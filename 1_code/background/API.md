@@ -92,6 +92,8 @@ wx.request({
   输入(String)`SessionToken`(String)`DeviceID`/(String)`UserName`/(HASH)`Password`/(String)`CAPTCHACode`(这个懒得写，默认1先)
 
   输出(Int)`StatusCode`/(String)`SecretKey`/(Int)`UID`
+  
+  此处返回401即为用户名或密码错误
 
 ### 客户层  -  Customer
 

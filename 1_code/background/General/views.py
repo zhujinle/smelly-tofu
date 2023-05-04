@@ -12,11 +12,19 @@ from databaseManagementLocal.models import User
 def GetSessionToken(request):
     # 检查url中是否有参数deviceid
     DeviceID = request.GET.get('DeviceID', None)
+    inputSceretKey = request.GET.get('SecretKey', None)
     if (DeviceID is None) | len(DeviceID) < 8 :
         return HttpResponseBadRequest("参数错误")
     a = str(time.time())
     res = DeviceID + a
     res = base64.b64encode(res.encode('utf-8'))
+    if inputSceretKey != "0":
+        try:
+            finduser = User.objects.get(SecretKey = inputSceretKey)
+        except finduser.DoesNotExist:
+            return JsonResponse({'StatusCode': 401})
+        finduser.NewSessionToken = res
+        User.save()
     return HttpResponse(base64.b64encode(res))
 
 def CheckSessionToken(request):
@@ -69,24 +77,25 @@ def Login(request):
         inputUserName = injson['UserName']
         DeviceID = injson['DeviceID']
         inputpwd = injson['Password']
-        captha = injson['CAPTHACode']
+        capthaCode = injson['CAPTCHACode']
         firsttime = base64.b64decode(base64.b64decode(firsttime))
         firsttime = str(firsttime)
         firsttime = firsttime[2:len(firsttime)-1]
+        if capthaCode != "1":
+            return JsonResponse({'StatusCode': 401})
         if str(firsttime[0:len(DeviceID)]) == DeviceID:  # 判断是否同一DeviceID
             firsttime = firsttime[len(DeviceID):len(firsttime)]
             stilltime = time.time() - float(firsttime)
-            if stilltime < 600:
-                return JsonResponse({'StatusCode': 200})
-            else:
+            if stilltime >= 600:
                 return JsonResponse({'StatusCode': 401})
         else:
             return JsonResponse({'StatusCode': 401})
-        if captha != 1:
-            return JsonResponse({'StatusCode': 401})
     except:
         return JsonResponse({'StatusCode': 418})
-    else:
-        finduser = User.objects.values().filter(UserName = inputUserName)
-
-    return HttpResponseBadRequest("404")
+    finduser = User.objects.values()
+    finduser = list(finduser.filter(UserName = inputUserName))
+    if finduser is None:
+        return JsonResponse({'StatusCode': 401})
+    if finduser[0]['Password'] == inputpwd:
+        return JsonResponse({'StatusCode': 200, 'SecretKey': finduser[0]['SecretKey'], 'UID': finduser[0]['UID']})
+    return JsonResponse({'StatusCode': 401})
