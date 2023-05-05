@@ -22,4 +22,16 @@ from Customer.views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
+<<<<<<< Updated upstream
+=======
+    path('PersonalInformationView/', PersonalInformationView),
+    path('ModifyPersonalInformation/', ModifyPersonalInformation),
+    path('ViewShoppingCart/', ViewShoppingCart),
+    path('ModifyShoppingCart/', ModifyShoppingCart),
+    path('MakeOrder/', MakeOrder),
+    path('OrderList/', OrderList),
+    path('CheckOrder/', CheckOrder),
+    path('ConfirmOrder/', ConfirmOrder),
+
+>>>>>>> Stashed changes
 ]

@@ -17,9 +17,13 @@ class User(models.Model):
     # Avatar
     def user_directory_path(self, filename):
         # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-        return 'user_{0}/{1}.jpg'.format(self.UID, filename)
+        return 'uploads/user_{0}_{1}.jpg'.format(self.UID, filename[0:len(filename)-4])
 
+<<<<<<< Updated upstream
     Avatar = models.ImageField(upload_to=user_directory_path, height_field=300, width_field=300)
+=======
+    Avatar = models.ImageField(upload_to=user_directory_path,  blank=True)
+>>>>>>> Stashed changes
     # 证件，商家侧定义为工商证，配送测定义为健康证
     License = models.ImageField(upload_to=user_directory_path)
 
@@ -61,9 +65,9 @@ class Menu(models.Model):
     # Photo
     def user_directory_path(self, filename):
         # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-        return 'user_{0}/Foods/{1}.jpg'.format(self.ShopID, filename)
+        return 'uploads/user_{0}_Foods_{1}.jpg'.format(self.ShopID, filename)
 
-    FoodPhoto = models.ImageField(upload_to=user_directory_path, height_field=1080, width_field=1920)
+    FoodPhoto = models.ImageField(upload_to=user_directory_path)
     # Money
     Money = models.FloatField(max_length=10)
     # Discount
@@ -94,7 +98,7 @@ class Order(models.Model):
     # 商店UID
     ShopUID = models.IntegerField(blank=False)
     # 配送员UID
-    DeliveryStaffUID = models.IntegerField(blank=True)
+    DeliveryStaffUID = models.IntegerField(blank=True, null=True)
 
     # 配送状态
     class DeliveryType(models.IntegerChoices):
