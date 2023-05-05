@@ -5,12 +5,8 @@ from django.db import models
 class User(models.Model):
     # UID
     UID = models.AutoField(primary_key=True)
-    # UserName
-    UserName = models.CharField(max_length=30, help_text='UserName', blank=False)
     # Password
     Password = models.CharField(max_length=30, help_text='pwd', blank=False)
-    #最新的SessionToken
-    NewSessionToken = models.CharField(max_length=100, default="0", blank=False)
     # 名儿
     Name = models.CharField(max_length=20, blank=False)
     # 联系方式
@@ -21,11 +17,15 @@ class User(models.Model):
     # Avatar
     def user_directory_path(self, filename):
         # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-        return 'user_{0}/{1}.jpg'.format(self.UID, filename)
+        return 'uploads/user_{0}_{1}.jpg'.format(self.UID, filename[0:len(filename)-4])
 
-    Avatar = models.ImageField(upload_to=user_directory_path, height_field=300, width_field=300, blank=True)
+<<<<<<< Updated upstream
+    Avatar = models.ImageField(upload_to=user_directory_path, height_field=300, width_field=300)
+=======
+    Avatar = models.ImageField(upload_to=user_directory_path,  blank=True)
+>>>>>>> Stashed changes
     # 证件，商家侧定义为工商证，配送测定义为健康证
-    License = models.ImageField(upload_to=user_directory_path,blank=True)
+    License = models.ImageField(upload_to=user_directory_path)
 
     # 用户类型标记
     class UserType(models.IntegerChoices):
@@ -53,7 +53,7 @@ class User(models.Model):
     # 总金额
     MoneySum = models.IntegerField(default=0)
     # 购物车
-    Cart = models.JSONField(blank=True, null=True)
+    Cart = models.JSONField()
 
 
 class Menu(models.Model):
@@ -65,9 +65,9 @@ class Menu(models.Model):
     # Photo
     def user_directory_path(self, filename):
         # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-        return 'user_{0}/Foods/{1}.jpg'.format(self.ShopID, filename)
+        return 'uploads/user_{0}_Foods_{1}.jpg'.format(self.ShopID, filename)
 
-    FoodPhoto = models.ImageField(upload_to=user_directory_path, height_field=1080, width_field=1920)
+    FoodPhoto = models.ImageField(upload_to=user_directory_path)
     # Money
     Money = models.FloatField(max_length=10)
     # Discount
@@ -98,7 +98,7 @@ class Order(models.Model):
     # 商店UID
     ShopUID = models.IntegerField(blank=False)
     # 配送员UID
-    DeliveryStaffUID = models.IntegerField(blank=True)
+    DeliveryStaffUID = models.IntegerField(blank=True, null=True)
 
     # 配送状态
     class DeliveryType(models.IntegerChoices):

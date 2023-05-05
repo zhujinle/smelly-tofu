@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+
 from General.views import CheckSessionToken, GetSessionToken, Login
+from django.contrib import admin
+from django.conf import settings
+from django.urls import re_path
+from django.views.static import serve
+import os
 
 
 # 模块的import
@@ -29,6 +35,9 @@ urlpatterns = [
     path('api/V1/Seller/', include('Seller.urls')),
     path('api/V1/Delivery_Staff/', include('Delivery_Staff.urls')),
     path('api/V1/Dashboard/', include('AdminDashboard.urls')),
-    path('api/V1/Customer/', include('Customer.urls')),
+    path('api/V1/Customer/', include('Customer.urls' )),
     path('api/V1/Admin/', include('AdminDashboard.urls')),
+
+    re_path('^media/(?P<path>.*?)$', serve,kwargs={'document_root':settings.MEDIA_ROOT}),
+    # path(r'media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
