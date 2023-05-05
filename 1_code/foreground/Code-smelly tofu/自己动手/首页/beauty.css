@@ -1,0 +1,197 @@
+body {
+	margin: 0 auto;
+	font-size: 12px;
+	font-family: "宋体", arial;
+	line-height: 22px;
+	position: relative;
+}
+
+.button01{
+	position: absolute;
+	right: 260px;
+	top: 0px;
+}
+
+div,
+p,
+input,
+ul,
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+dl,
+dt,
+dd {
+	height: auto;
+	margin: 0;
+	padding: 0;
+	vertical-align: middle;
+}
+
+li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+.ul {
+    text-align: center;
+	list-style: none;
+}
+
+.divclear {
+	clear: both;
+}
+
+img {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #333;
+}
+
+a:link {
+	color: #333;
+}
+
+a:hover {
+	color: #629705;
+	text-decoration: none;
+	overflow: hidden;
+}
+
+/*---网页开始-----*/
+/*---top开始-----*/
+.top {
+	height: 200px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+.ban {
+	height: 335px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+/*---导航----*/
+.daohang {
+	width: 1600px;
+	height: 55px;
+	background-color: #224200;
+	margin: 0 auto;
+}
+
+#nav {
+	width: 1600px;
+	height: 55px;
+	line-height: 47px;
+	font-family: "宋体";
+	font-weight: bolder;
+	font-size: 24px;
+	margin: 0 auto;
+	
+}
+
+#nav ul {
+	margin: 0px auto;
+}
+
+#nav li {
+	float: left;
+	width: 350px;
+	text-align: center;
+	color: #ffffff;
+}
+
+#nav a {
+	width: 165px;
+	height: 47px;
+	/* display: block; */
+	font-family: "楷体";
+	font-size: 24px;
+	font-weight: bold;
+	float: left;
+}
+
+#nav a:link {
+	color: #FFF;
+}
+
+#nav a:visited {
+	color: #FFF;
+	text-decoration: none;
+	overflow: hidden;
+}
+
+#nav a:hover {
+	color: #FFF;
+	text-decoration: none;
+	overflow: hidden;
+	background: #224200;
+}
+
+#nav a:active {
+	color: #FFF;
+	text-decoration: none;
+	overflow: hidden;
+	background: #224200;
+}
+.downorder{
+    width: 100px;
+    position: relative;
+    height: auto;
+}
+.downorder:hover a{
+    display: block;
+}
+/* .order{
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    padding: 15px;
+    background-color: rgb(16, 179, 243);
+    color: aliceblue;
+}
+.order:hover{
+    background-color: rgb(17, 100, 224);
+    color: rgb(14, 13, 13);
+} */
+.downtext{
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    background-color: rgb(224, 187, 22);
+    color: aliceblue;
+	z-index: 10;
+}
+.downtext > a{
+    /* display: block; */
+    display: none;
+    padding: 15px;
+
+}
+.downtext a:hover{
+    background-color: rgb(27, 170, 111);
+    color: rgb(142, 236, 79);
+}
+
+
+
+.main {
+	width: 1000px;
+	margin: 0 auto;
+	margin-top: 10px;
+}
