@@ -161,55 +161,61 @@ wx.request({
 
 分地址：smelly-Tofu.peterpig.eu.org/api/V1/Seller/
 
-- [ ] `GET`InformationView 商家信息查看
+- [x] `GET`InformationView 商家信息查看
 
   输入(Int)`UID`(Shop's)
 
   输出(String)`StatusCode`(String)`ShopName`/(UrlString)`AvatarUrl`/(Int)`MenberStatus`/(String)`Address`/(String)`Phone`/(UrlString)`BusinessLicenseUrl`/
 
-- [ ] `POST`ModifyInformation 商家信息修改
+- [x] `POST`ModifyInformation 商家信息修改
 
-  输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`/(String)`ShopName`/(UrlString)`AvatarUrl`/(Int)`MenberStatus`/(String)`Address`/(String)`Phone`/(UrlString)`BusinessLicenseUrl`/
+  输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`/(String)`ShopName`/(UrlString)`AvatarUrl`/(String)`Address`/(String)`Phone`/(UrlString)`BusinessLicenseUrl`/
 
-  输出(String)`StatusCode`
+  输出(String)`StatusCode`/(String)`inputShopName`
 
-- [ ] `GET`MenuView 菜单信息查看
+- [x] `GET`MenuView 菜单信息查看
 
   输入(Int)`UID`(Shop's)
 
-  输出(String)`StatusCode`(String)/(Json)`MenuList` `{[Foodid1,FoodPhotoUrl1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,MoneyN,DiscountN]}`
+  输出(String)`StatusCode`(String)/(Json)`MenuList` `{[ShopID_id,Foodid1,FoodPhoto1,Money1,Discount1],[ShopID_id,Foodid2,FoodPhoto2,Money2,Discount2]......[ShopID_id,FoodidN,FoodPhotoN,MoneyN,DiscountN]}`
 
-- [ ] `POST`ModifyMenu 菜单信息修改
+- [x] `POST`AddMenu 菜单信息修改
 
-  输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`/(Json)`MenuList` `{[Foodid1,FoodPhotoUrl1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Money2,Discount2]......[FoodidN,FoodPhotoUrln,MoneyN,DiscountN]}`
+  输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`/(String)`FoodID`/(File)`FoodPhoto`/(float)`Money`/(Float)`Discount`
 
   输出(String)`StatusCode`(String)
 
-- [ ] `POST`DashboardView 商家交易数据信息查看
+- [x] `POST`ModifyMenu 菜单信息修改
+
+  输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`/(String)`FoodID`/(File)`FoodPhoto`/(float)`Money`/(Float)`Discount`
+
+  输出(String)`StatusCode`(String)
+
+- [x] `POST`DashboardView 商家交易数据信息查看
 
   输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`
 
-  输出(String)`StatusCode`(String)/(Double)`SumMoney`/(Double)`DailyMoney`/(Double)`WeeklyMoeny`/(Double)`MonthlyMoney`/(Int)`DailyCustomerSum`
+  输出(String)`StatusCode`(String)/(Double)`SumMoney`/(Double)`DailyMoney`/(Double)`MonthlyMoeny`/(Double)`Sumcustomer`/(Int)`DailyCustomerSum`
 
-- [ ] `POST`OrderList 查看订单列表
+- [x] `POST`OrderList 查看订单列表
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`
 
   输出(String)`StatusCode`/(json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}`
 
-- [ ] `POST`DeliveryStaffList 查看可用配送员
+- [x] `POST`DeliveryStaffList 查看可用配送员
 
   输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`
 
   输出(String)`StatusCode`/(json)`DeliveryStaffList` `{[UID1,Name1],[UID2,Name2].......[UIDN,NameN]}`
 
-- [ ] `POST`DeliveryPush 通知配送
+- [x] `POST`DeliveryPush 通知配送
 
   输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`/(String)`OrderNumber`/(Int)`DeliveryStaffUID`
 
-  输出(String)`StatusCode`
+  输出(String)`StatusCode`/(String)`OrderNumber`
 
-- [ ] `POST`CheckOrder 订单信息查询
+- [x] `POST`CheckOrder 订单信息查询
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)OrderNumber
 

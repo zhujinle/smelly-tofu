@@ -1,8 +1,6 @@
-<<<<<<< Updated upstream
 from django.shortcuts import render
 
 # Create your views here.
-=======
 import base64
 import json
 import os
@@ -28,9 +26,9 @@ def PersonalInformationView(request):
     except:
         return JsonResponse({'StatusCode': 418})
     try:
-        FindUser = User.objects.get(UID = inputUID)
+        FindUser = User.objects.get(Q(UID = inputUID) & Q(Type=1))
     except:
-        return JsonResponse({'StatusCode': 418})
+        return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     return JsonResponse({
         'StatusCode': 200,
         'UserName': FindUser.UserName,
@@ -58,7 +56,7 @@ def ModifyPersonalInformation(request):
     except:
         return JsonResponse({'StatusCode': 418})
     try:
-        finduser = User.objects.get(Q(SecretKey=SecretKey) & Q(UID=inputUID))
+        finduser = User.objects.get(Q(SecretKey=SecretKey) & Q(UID=inputUID) & Q(Type =1))
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg':'无此用户'})
     if inputUserName is not None:
@@ -136,9 +134,13 @@ def MakeOrder(request):
     except:
         return JsonResponse({'StatusCode': 418})
     try:
-        finduser = User.objects.get(Q(SecretKey=SecretKey) & Q(UID=inputUID))
+        finduser = User.objects.get(Q(SecretKey=SecretKey) & Q(UID=ShopID))
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
+    try:
+        findShop = User.objects.get(Q(UID=inputUID))
+    except User.DoesNotExist:
+        return JsonResponse({'StatusCode': 401, 'msg': '无此店家'})
     Cart = finduser.Cart['CartNember']
     MoneySum = 0.0
     for each in Cart:
@@ -155,6 +157,14 @@ def MakeOrder(request):
                                ShopUID=ShopID,
                                Cart=finduser.Cart,
                                MoneySum=MoneySum)
+    findShop.MoneyDaily += MoneySum
+    findShop.MoneySum += MoneySum
+    findShop.MoneyMonthly += MoneySum
+    finduser.MoneyDaily += MoneySum
+    finduser.MoneyMonthly += MoneySum
+    finduser.MoneySum += MoneySum
+    findShop.CustomerDaily += 1
+    findShop.CustomerSum +=1
     return JsonResponse({'StatusCode': 200, 'OrderNumber': res.OrderNumber, 'PayUrl': 'http://127.0.0.1:8000/media/static/qrcode/'+str(int(MoneySum))+'.jpg'})
 
 def ConfirmOrder(request):
@@ -218,7 +228,7 @@ def CheckOrder(request):
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '无此订单'})
     try:
-        findShop = User.objects.get(Q(UID=findOrder.ShopUID))
+        findShop = User.objects.get(Q(Type=2) & Q(UID=findOrder.ShopUID))
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '订单信息错误'})
     if findOrder.DeliveryState > 1:
@@ -261,4 +271,4 @@ def CheckOrder(request):
             'CartMenber': findOrder.Cart,
             'MoneySum': findOrder.MoneySum
         })
->>>>>>> Stashed changes
+    return JsonResponse({'StatusCode': 401, 'msg': '订单信息错误'})
