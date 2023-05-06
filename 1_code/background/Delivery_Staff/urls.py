@@ -16,10 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-
 # 模块的import
 from Delivery_Staff.views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    path('InformationView/', InformationView),
+    path('ModifyInformation/', ModifyInformation),
+    path('OrderListView/', OrderListView),
+    path('CheckOrder/', CheckOrder),
+    path('ModifyOrder/', ModifyOrder),
+    path('DashboardView/', DashboardView),
 ]

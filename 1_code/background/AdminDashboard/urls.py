@@ -22,4 +22,15 @@ from AdminDashboard.views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    path('UserView/', UserView ),
+    path('SingleUserView/', SingleUserView ),
+    path('ModifyUser/', ModifyUser ),
+    path('MenuView/', MenuView  ),
+    path('ModifyMenu/', ModifyMenu  ),
+    path('OrderListView/', OrderListView  ),
+    path('CheckOrder/', CheckOrder ),
+    path('ModifyOrder/', ModifyOrder ),
+    path('DeliveryPush/', DeliveryPush ),
+    path('DashboardView/', DashboardView),
+    path('AddMenu/', AddMenu),
 ]

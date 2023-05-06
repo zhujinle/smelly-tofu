@@ -32,7 +32,7 @@ def PersonalInformationView(request):
     return JsonResponse({
         'StatusCode': 200,
         'UserName': FindUser.UserName,
-        'AvatarUrl': FindUser.Avatar.url,
+        'AvatarUrl': '' if FindUser.Avatar.name == '' else FindUser.Avatar.url,
         'MenberStatus': FindUser.get_Member_display(),
         'MoneySum': FindUser.MoneySum,
         'Address': FindUser.Address,

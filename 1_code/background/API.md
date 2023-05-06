@@ -225,37 +225,37 @@ wx.request({
 
 分地址：smelly-Tofu.peterpig.eu.org/api/V1/Delivery_Staff
 
-- [ ] `GET`InformationView 配送员信息查看
+- [x] `GET` InformationView 配送员信息查看
 
   输入(Int)`UID`
 
-  输出(String)`StatusCode`(String)`UserName`/(UrlString)`AvatarUrl`/(Int)`MenberStatus`/(Double)`MoneySum`/(String)`Address`/(String)`Phone`/(UrlString)HealthCertUrl
+  输出(String)`StatusCode`(String)`UserName`/(UrlString)`AvatarUrl`/(Int)`MenberStatus`/(String)`Phone`/(UrlString)HealthCertUrl
 
-- [ ] `POST`ModifyInformation 配送员信息修改
+- [x] `POST  `ModifyInformation 配送员信息修改
 
-  输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)`UserName`/(UrlString)`AvatarUrl`/(String)`Address`/(String)`Phone`
+  输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)`UserName`/(UrlString)`AvatarUrl`/(String)`Phone`/(FILE)`HealthCertUrl`
 
-  输出(String)`StatusCode`/(String)`UserName`/(String)`Address`
+  输出(String)`StatusCode`/(String)`UserName`
 
-- [ ] `POST`OrderListView 订单列表查看
+- [x] `POST ` OrderListView  订单列表查看
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`
 
   输出(String)`StatusCode`/(json)`OrderList` `{OrderNumber1,OrderNumber2.......OrderNumberN}`
 
-- [ ] `POST`CheckOrder 订单信息查询
+- [x] `POST` CheckOrder 订单信息查询
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)OrderNumber
 
   输出(String)`StatusCode`(Int)`OrderNumber`/(String)`Address`/(String)`Phone`/(String)`Notes`/(Int)`Payment` `(1:Alipay,2:Wechat,3:balance)`/(Int)`PayStatus`/(String)`ShopAddress`/(String)`ShopPhone`/(String)`DeliveryStaffName`/(String)`DeliveryStaffPhone`/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/(Json)`CartMenber` `{[Foodid1,FoodPhotoUrl1,Number1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Number2,Money2,Discount2]......[FoodidN,FoodPhotoUrlN,NumberN,MoneyN,DiscountN]}`/(Double)`MoneySum`
 
-- [ ] `POST`ModifyOrder 订单信息修改
+- [x] `POST `ModifyOrder 订单信息修改
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)OrderNumber/(Int)`DeliveryStatus` `(0:商家未接单,1:商家已结单未分配配送,2:商家已结单已分配配送未取餐,3:配送正在店内取餐,4:配送中,5:已送达)`/
 
   输出(String)`StatusCode`
 
-- [ ] DashboardView 个人收入信息查看
+- [x] DashboardView 个人收入信息查看
 
   输入(Int)`UID`(Shop's)/(String)`SessionToken`/(String)`SecretKey`
 
@@ -265,25 +265,25 @@ wx.request({
 
 分地址：smelly-Tofu.peterpig.eu.org/api/V1/Admin
 
-- [ ] UserView 用户信息查看
+- [x] UserView 用户信息查看
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`
 
-  输出(String)`StatusCode`/(json)`UserList` `{[UserNumber1,UserType1],[UserNumber2,UserType2].......[UserNumberN,UserTypeN]}`
+  输出(String)`StatusCode`/(json)`UserList` `{[UID1,UserType1],[UID2,UserType2].......[UIDN,UserTypeN]}`
 
-- [ ] SingleUserView 单个用户信息查看
+- [x] SingleUserView 单个用户信息查看
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(Int)TargetUserUID
 
-  输出(String)`StatusCode`/(String)`UserName`/(UrlString)`AvatarUrl`/(Int)`MenberStatus`/(Double)`MoneySum`/(String)`Address`/(String)`Phone`/(Int)UserType
+  输出(String)`StatusCode`/(Int)`UID`/(String)`PasswordHash`/(String)`UserName`/(UrlString)`AvatarUrl`/(UrlString)`License`/(Int)`MenberStatus`/(Double)`MoneySum`/(String)`Address`/(String)`Phone`/(String)UserType/(float)`MoneyDaily`/(float)`MoneyMonthly`/(Json)`Cart`/(Int)`CustomerDaily`/(Int)`CustomerSum`
 
-- [ ] ModifyUser 用户信息修改
+- [x] ModifyUser 用户信息修改
 
   输入(Int)`UID`/(String)`SessionToken`/(String)`SecretKey`/(String)`UserName`/(UrlString)`AvatarUrl`/(String)`Address`/(String)`Phone`/(Int)UserType
 
   输出(String)`StatusCode`
 
-- [ ] MenuView 菜单信息查看
+- [x] MenuView 菜单信息查看
 
   输入(Int)`TargetShopUID`
 
@@ -291,7 +291,7 @@ wx.request({
 
 - [ ] ModifyMenu 菜单信息修改
 
-  输入(Int)`TargetShopUID`/(String)`SessionToken`/(String)`SecretKey`/(Json)(Json)`MenuList` `{[Foodid1,FoodPhotoUrl1,Money1,Discount1],[Foodid2,FoodPhotoUrl2,Money2,Discount2]......[FoodidN,FoodPhotoUrln,MoneyN,DiscountN]}`
+  输入(Int)`TargetFoodID`/(String)`SessionToken`/(String)`SecretKey`/(File)`FoodPhoto`/(float)`Money`/(Float)`Discount`
 
   输出(String)`StatusCode`(String)
 

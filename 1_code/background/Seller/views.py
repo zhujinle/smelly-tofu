@@ -24,11 +24,11 @@ def InformationView(request):
     return JsonResponse({
         'StatusCode': 200,
         'ShopName': FindUser.UserName,
-        'AvatarUrl': FindUser.Avatar.url,
+        'AvatarUrl': '' if FindUser.Avatar.name == '' else FindUser.Avatar.url,
         'MenberStatus': FindUser.get_Member_display(),
         'Address': FindUser.Address,
         'Phone': FindUser.Phone,
-        'BusinessLicenseUrl': FindUser.License.url
+        'BusinessLicenseUrl': '' if FindUser.License.name == '' else FindUser.License.url
     })
 
 
@@ -259,6 +259,11 @@ def DeliveryPush(request):
         return JsonResponse({'StatusCode': 401, 'msg': '无此订单'})
     FindOrder.DeliveryState = 2
     FindOrder.DeliveryStaffUID = inputDeliveryStaffUID
+    FindDeliveryStaff.CustomerDaily +=1
+    FindDeliveryStaff.CustomerSum += 1
+    FindDeliveryStaff.MoneyMonthly += 1.5
+    FindDeliveryStaff.MoneyDaily +=1.5
+    FindDeliveryStaff.MoneySum +=1.5
     FindOrder.save()
     return JsonResponse({
         'StatusCode': 200,
@@ -303,7 +308,6 @@ def CheckOrder(request):
             'Address': findOrder.Address,
             'Phone': findOrder.Phone,
             'Notes': findOrder.Notes,
-            'Payment': findOrder.get_Payment_display(),
             'PayStatus': findOrder.PayStatus,
             'ShopName': findShop.Name,
             'ShopAddress': findShop.Address,
@@ -321,7 +325,6 @@ def CheckOrder(request):
             'Address': findOrder.Address,
             'Phone': findOrder.Phone,
             'Notes': findOrder.Notes,
-            'Payment': findOrder.get_Payment_display(),
             'PayStatus': findOrder.PayStatus,
             'ShopName': findShop.Name,
             'ShopAddress': findShop.Address,
