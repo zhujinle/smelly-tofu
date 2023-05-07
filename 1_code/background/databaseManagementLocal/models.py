@@ -1,12 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
 # Create your models here.
-class User(models.Model):
+class User(AbstractUser):
     # UID
     UID = models.AutoField(primary_key=True)
-    # Password
-    Password = models.CharField(max_length=30, help_text='pwd', blank=False)
     # 名儿
     Name = models.CharField(max_length=20, blank=False)
     # 联系方式
@@ -50,8 +49,6 @@ class User(models.Model):
     MoneySum = models.IntegerField(default=0)
     # 购物车
     Cart = models.JSONField(blank=True,null=True)
-    #UserName
-    UserName = models.CharField(max_length=20, blank=False)
     # dailyCustomer
     CustomerDaily = models.IntegerField(blank=True,default=0)
     # Sum Customer

@@ -31,7 +31,7 @@ def PersonalInformationView(request):
         return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     return JsonResponse({
         'StatusCode': 200,
-        'UserName': FindUser.UserName,
+        'UserName': FindUser.Name,
         'AvatarUrl': '' if FindUser.Avatar.name == '' else FindUser.Avatar.url,
         'MenberStatus': FindUser.get_Member_display(),
         'MoneySum': FindUser.MoneySum,
@@ -60,7 +60,7 @@ def ModifyPersonalInformation(request):
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg':'无此用户'})
     if inputUserName is not None:
-        finduser.UserName = inputUserName
+        finduser.Name = inputUserName
     if inputAvatar is not None:
         finduser.Avatar = inputAvatar
     if inputAddress is not None:
@@ -68,7 +68,7 @@ def ModifyPersonalInformation(request):
     if imputphone is not None:
         finduser.Phone = imputphone
     finduser.save()
-    return JsonResponse({'StatusCode': 200, 'UserName': inputUserName})
+    return JsonResponse({'StatusCode': 200, 'UserName': finduser.Name})
 def ViewShoppingCart(request):
     # 将请求参数统一放入request 的 params 属性中，方便后续处理
     # 非POST请求
