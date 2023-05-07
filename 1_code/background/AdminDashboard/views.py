@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from databaseManagementLocal.models import User, Order, Menu
-from django.db.models import Q, F
+from django.db.models import *
 
 
 # Create your views here.
@@ -51,7 +51,7 @@ def SingleUserView(request):
         'PasswordHash': FindUser.Password,
         'Name': FindUser.Name,
         'Phone': FindUser.Phone,
-        'UserName': FindUser.UserName,
+        'UserName': FindUser.Name,
         'AvatarUrl': '' if FindUser.Avatar.name == '' else FindUser.Avatar.url,
         'BusinessLicenseUrl' if FindUser.Type == 2 else (
             'HealthCertUrl' if FindUser.Type == 3 else 'License'): '' if FindUser.License.name == '' else FindUser.License.url,
@@ -107,7 +107,7 @@ def ModifyUser(request):
     if inputAddress is not None:
         finduser.Address = inputAddress
     if inputUserName is not None:
-        finduser.UserName = inputUserName
+        finduser.Name = inputUserName
     if inputCart is not None:
         finduser.Cart = inputCart
     finduser.save()
@@ -380,4 +380,34 @@ def DeliveryPush(request):
     })
 
 def DashboardView(request):
-    return JsonResponse({'StatusCode': 404})
+    if request.method != 'POST':
+        return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
+    try:
+        SessionToken = request.POST.get('SessionToken', None)
+        inputUID = request.POST.get('UID', None)
+        SecretKey = request.POST.get('SecretKey', None)
+        if SessionToken is None or inputUID is None or SecretKey is None:
+            return JsonResponse({'StatusCode': 418})
+    except:
+        return JsonResponse({'StatusCode': 418})
+    SumMoney = Order.objects.values().aggregate(Sum('MoneySum'))['MoneySum__sum']
+    AvgMoney = Order.objects.values().aggregate(Avg('MoneySum'))['MoneySum__avg']
+    MaxMoney = Order.objects.values().aggregate(Max('MoneySum'))['MoneySum__max']
+    MinMoney = Order.objects.values().aggregate(Min('MoneySum'))['MoneySum__min']
+    DailyMoney = User.objects.filter(Type=2).aggregate(Sum('MoneyDaily'))['MoneyDaily__sum']
+    MonthlyMoney = User.objects.filter(Type=2).aggregate(Sum('MoneyMonthly'))['MoneyMonthly__sum']
+    DailyCustomer = User.objects.filter(Type=2).aggregate(Sum('CustomerDaily'))['CustomerDaily__sum']
+    SumCustomer = User.objects.filter(Type=2).aggregate(Sum('CustomerSum'))['CustomerSum__sum']
+    UserCounnt = User.objects.values().count()
+    return JsonResponse({
+        'StatusCode': 200,
+        'SumMoney': SumMoney,
+        'AvgMoney': AvgMoney,
+        'MaxMoney': MaxMoney,
+        'MinMoney': MinMoney,
+        'DailyMoney': DailyMoney,
+        'MonthlyMoney': MonthlyMoney,
+        'DailyCustomer': DailyCustomer,
+        'SumCustomer': SumCustomer,
+        'UserCounnt': UserCounnt
+    })

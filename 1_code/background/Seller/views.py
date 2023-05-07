@@ -23,7 +23,7 @@ def InformationView(request):
         return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     return JsonResponse({
         'StatusCode': 200,
-        'ShopName': FindUser.UserName,
+        'ShopName': FindUser.Name,
         'AvatarUrl': '' if FindUser.Avatar.name == '' else FindUser.Avatar.url,
         'MenberStatus': FindUser.get_Member_display(),
         'Address': FindUser.Address,
@@ -55,7 +55,7 @@ def ModifyInformation(request):
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     if inputShopName is not None:
-        finduser.UserName = inputShopName
+        finduser.Name = inputShopName
     if inputAvatar is not None:
         finduser.Avatar = inputAvatar
     if inputAddress is not None:
@@ -65,7 +65,7 @@ def ModifyInformation(request):
     if inputBusinessLicense is not None:
         finduser.License = inputBusinessLicense
     finduser.save()
-    return JsonResponse({'StatusCode': 200, 'UserName': inputShopName})
+    return JsonResponse({'StatusCode': 200, 'UserName': finduser.Name})
 
 
 def MenuView(request):
