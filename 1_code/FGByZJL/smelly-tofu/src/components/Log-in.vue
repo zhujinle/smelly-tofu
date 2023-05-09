@@ -5,6 +5,9 @@
             <div class="avatar_box">
                 <img src="../assets/logo.png" alt="" srcset="">
             </div>
+            <div class="Name">
+                  <span>Smelly-Tofu 外卖系统</span>
+            </div>
             <!-- Form -->
             <el-form ref="loginFormRef" class="login_form" :model="LoginForm" :rules="LoginFormrules">
                 <el-form-item prop="username">
@@ -70,17 +73,29 @@ export default {
     height: 100%;
 }
 .login_box{
-    width: 450px;
-    height: 300px;
+    // width: 450px;
+    // height: 300px;
+    width: 40%;
+    height: 40%;
     background-color: #fff;
-    border-radius: 30px;
+    border-radius: 20px;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
+    .Name{
+      display: flex;
+      height: 20%;
+      align-items: center;
+      justify-content: center;
+      padding: 10% 20%;
+      font-size: 3.5vw;
+    }
     .avatar_box{
-        weight: 130px;
-        height: 130px;
+        // weight: 130px;
+        // height: 130px;
+        weight: 20%;
+        height: 20%;
         border: 1px solid #eee;
         border-radius: 50%;
         padding: 10px;
@@ -107,7 +122,8 @@ export default {
     position: absolute;
     bottom: 0%;
     width: 100%;
-    padding: 0% 20px;
+    // height: 80%;
+    padding: 0% 10%;
     box-sizing: border-box;
 }
 </style>
