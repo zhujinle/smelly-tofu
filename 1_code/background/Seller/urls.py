@@ -22,4 +22,13 @@ from Seller.views import *
 
 urlpatterns = [
     path('InformationView/', InformationView ),
+    path('ModifyInformation/', ModifyInformation ),
+    path('MenuView/', MenuView ),
+    path('ModifyMenu/', ModifyMenu ),
+    path('DashboardView/', DashboardView ),
+    path('OrderList/', OrderList ),
+    path('DeliveryStaffList/', DeliveryStaffList ),
+    path('DeliveryPush/', DeliveryPush ),
+    path('CheckOrder/', CheckOrder ),
+    path('AddMenu/', AddMenu ),
 ]
