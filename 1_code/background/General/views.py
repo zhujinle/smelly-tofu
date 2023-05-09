@@ -66,10 +66,10 @@ def Login(request):
     if request.method != 'POST':
         return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
     try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
-        SessionToken = request.POST.get('SessionToken', None)
+        # SessionToken = request.POST.get('SessionToken', None)
         userName = request.POST.get('username')
         passWord = request.POST.get('password')
-        if SessionToken is None or userName is None or passWord is None:
+        if  userName is None or passWord is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
