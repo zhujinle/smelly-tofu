@@ -60,6 +60,34 @@ def CheckSessionToken(request):
     else:
         return JsonResponse({'StatusCode': 401})
 
+def GetMenuList(request):
+    # 将请求参数统一放入request 的 params 属性中，方便后续处理
+    # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
+    if request.method != 'POST':
+        return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
+    try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
+        # SessionToken = request.POST.get('SessionToken', None)
+        userName = request.POST.get('username')
+        SecretKey = request.POST.get('SecretKey')
+        if userName is None or SecretKey is None:
+            return JsonResponse({'StatusCode': 418})
+    except:
+        return JsonResponse({'StatusCode': 418})
+
+    try:
+        finduser = User.objects.get(username=userName)
+    except User.DoesNotExist:
+        return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
+    if finduser.Type == 1:
+        return JsonResponse()
+    elif finduser.Type == 2:
+        return JsonResponse()
+    elif finduser.Type == 3:
+        return JsonResponse()
+    elif finduser.Type == 4:
+        return JsonResponse()
+    return JsonResponse({'StatusCode': 418})
+
 def Login(request):
     # 将请求参数统一放入request 的 params 属性中，方便后续处理
     # POST/PUT/DELETE 请求 参数 从 request 对象的 body 属性中获取
