@@ -87,7 +87,7 @@ def Login(request):
                 a = str(time.time())
                 res = userName + a
                 res = base64.b64encode(res.encode('utf-8'))
-                finduser.SecretKey = base64.b64encode(res)
+                finduser.SecretKey = str(base64.b64encode(res),'utf-8')
                 finduser.save()
                 return JsonResponse({'StatusCode': 200 , 'SecreyKey': finduser.SecretKey})
             else:
@@ -97,11 +97,10 @@ def Login(request):
                 except User.DoesNotExist:
                     return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
                 # 在session中存入用户类型
-                request.session['usertype'] = 'mgr'
                 a = str(time.time())
                 res = userName + a
                 res = base64.b64encode(res.encode('utf-8'))
-                finduser.SecretKey = base64.b64encode(res)
+                finduser.SecretKey = str(base64.b64encode(res),'utf-8')
                 finduser.save()
                 return JsonResponse({'StatusCode': 200, 'SecreyKey': finduser.SecretKey})
         else:
