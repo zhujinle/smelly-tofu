@@ -1,9 +1,9 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
-  transpileDependencies: true,    
-  devServer:{
+  transpileDependencies: true,
+  devServer: {
     // 下面是接口的路径，我的接口 地址是http://ad.why.com/login
-    proxy:{
+    proxy: {
       '/api': {
       // 需要转发代理的域名
         target: 'http://127.0.0.1:8000/',

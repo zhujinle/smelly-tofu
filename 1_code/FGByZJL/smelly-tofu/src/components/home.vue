@@ -11,54 +11,55 @@
   <!-- 侧边 -->
   <el-container>
   <!-- 侧边栏 -->
-    <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-      <el-switch
-    v-model="isCollapse"
-    active-color="#13ce66"
-    inactive-color="#ff4949" style="padding-left: 30%;">
-  </el-switch>
-      <el-submenu index="1">
+    <el-menu :unique-opened="true" default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse" router>
+      <div class="toggle-button" @click="toggleCallapse">
+        <i class="el-icon-s-unfold"></i>
+      </div>
+      <!-- <el-switch
+        v-model="isCollapse"
+        style="padding-left: 30%;">
+      </el-switch> -->
+      <!-- 一级菜单 -->
+      <el-submenu :index="item.id + ''" v-for="item in MenuList" :key="item.id">
         <template slot="title">
-          <i class="el-icon-location"></i>
-          <span slot="title">导航一</span>
+          <i :class="iconsObj[item.id]"></i>
+          <span slot="title">{{item.authName}}</span>
         </template>
+        <!-- 二级菜单 -->
         <el-menu-item-group>
-          <span slot="title">分组一</span>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
+          <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id" >
+          <i class="el-icon-menu"></i>
+          <span>{{subItem.authName}}</span>
+          </el-menu-item>
         </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <span slot="title">选项4</span>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
       </el-submenu>
-      <el-menu-item index="2">
-        <i class="el-icon-menu"></i>
-        <span slot="title">导航二</span>
-      </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">导航三</span>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
-      </el-menu-item>
     </el-menu>
     <!-- 主体 -->
-      <el-main>Main</el-main>
+      <el-main>
+        <!-- 路由占位符 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
 export default {
+  created () {
+    this.getMenuList()
+  },
   data () {
     return {
-      isCollapse: true
+      isCollapse: true,
+      // 左侧菜单数据
+      MenuList: [],
+      iconsObj: {
+        100: 'el-icon-s-custom',
+        200: 'el-icon-s-goods',
+        300: 'el-icon-s-order',
+        400: 'el-icon-s-shop',
+        500: 'el-icon-s-operation'
+      }
     }
   },
   methods: {
@@ -72,6 +73,18 @@ export default {
     },
     handleClose (key, keyPath) {
       console.log(key, keyPath)
+    },
+    async getMenuList () {
+      const params = new URLSearchParams()
+      params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
+      const res = await this.$http.post('GetMenuList', params)
+      console.log(res)
+      if (res.data.StatusCode !== 200) return this.$message.error('信息错误！')
+      this.MenuList = res.data.List
+      console.log(this.MenuList)
+    },
+    toggleCallapse () {
+      this.isCollapse = !this.isCollapse
     }
   }
 }
@@ -108,5 +121,11 @@ export default {
 
 .home-container {
     height: 100%;
+}
+
+.toggle-button {
+  color: #333744;
+  text-align: center;
+  cursor: pointer;
 }
 </style>

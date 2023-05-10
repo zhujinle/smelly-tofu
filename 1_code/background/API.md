@@ -87,6 +87,12 @@ wx.request({
   输出(String)`StatusCode`/(String)`SessionToken`
 
 
+- [ ] `POST `GetMenuList 查看用户有权限访问的菜单
+
+  输入(String)userName/(String)SecretKey
+
+  输出(JSON)Menulist
+  
 - [ ] `POST`Login 登录，获取Secret Key
 
   输入(String)`SessionToken`(String)`DeviceID`/(String)`UserName`/(HASH)`Password`/(String)`CAPTCHACode`(这个懒得写，默认1先)
@@ -378,6 +384,10 @@ wx.request({
 
 - 303 单个订单修改
 
+- 304 可用配送员查看
+
+- 305 通知配送
+
   ###### 400 用户管理                only 管理
 
 - 401 用户列表
@@ -385,10 +395,6 @@ wx.request({
 - 402 单个用户查看
 
 - 403 单个用户修改
-
-- 404 可用配送员查看
-
-- 405 通知配送
 
   ###### 500 个人信息
 

@@ -67,25 +67,24 @@ def GetMenuList(request):
         return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
     try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
         # SessionToken = request.POST.get('SessionToken', None)
-        userName = request.POST.get('username')
         SecretKey = request.POST.get('SecretKey')
-        if userName is None or SecretKey is None:
+        if SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
 
     try:
-        finduser = User.objects.get(username=userName)
+        finduser = User.objects.get(SecretKey=SecretKey)
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     if finduser.Type == 1:
-        return JsonResponse()
+        return JsonResponse({"StatusCode":200,"List":[{"id":100,"authName":"用户功能","path":None,"children":[{"id":101,"authName":"点菜","path":"makeorder","children":[]},{"id":102,"authName":"购物车管理","path":"cartview","children":[]}]},{"id":200,"authName":"菜单管理","path":None,"children":[{"id":201,"authName":"食品列表","path":"menuview","children":[]},{"id":202,"authName":"单个菜品查看","path":"foodview","children":[]}]},{"id":300,"authName":"订单管理","path":None,"children":[{"id":301,"authName":"订单列表","path":"orderlist","children":[]},{"id":302,"authName":"单个订单查看","path":"singleorderview","children":[]}]},{"id":500,"authName":"个人信息","path":None,"children":[{"id":501,"authName":"个人信息查看","path":"myinfo","children":[]},{"id":502,"authName":"个人信息修改","path":"myinfoedit","children":[]},{"id":503,"authName":"个人数据看板","path":"mydashboard","children":[]}]}]})
     elif finduser.Type == 2:
-        return JsonResponse()
+        return JsonResponse({"StatusCode":200,"List":[{"id":200,"authName":"菜单管理","path":None,"children":[{"id":201,"authName":"食品列表","path":"menuview","children":[]},{"id":202,"authName":"单个菜品查看","path":"foodview","children":[]},{"id":203,"authName":"单个菜品编辑","path":"foodedit","children":[]},{"id":204,"authName":"增加单个菜品","path":"addfood","children":[]}]},{"id":300,"authName":"订单管理","path":None,"children":[{"id":301,"authName":"订单列表","path":"orderlist","children":[]},{"id":302,"authName":"单个订单查看","path":"singleorderview","children":[]},{"id":304,"authName":"可用配送员查看","path":"deliverystaffview","children":[]},{"id":305,"authName":"通知配送","path":"deliverypush","children":[]}]},{"id":500,"authName":"个人信息","path":None,"children":[{"id":501,"authName":"个人信息查看","path":"myinfo","children":[]},{"id":502,"authName":"个人信息修改","path":"myinfoedit","children":[]},{"id":503,"authName":"个人数据看板","path":"mydashboard","children":[]}]}]})
     elif finduser.Type == 3:
-        return JsonResponse()
+        return JsonResponse({"StatusCode":200,"List":[{"id":200,"authName":"菜单管理","path":None,"children":[{"id":202,"authName":"单个菜品查看","path":"foodview","children":[]}]},{"id":300,"authName":"订单管理","path":None,"children":[{"id":301,"authName":"订单列表","path":"orderlist","children":[]},{"id":302,"authName":"单个订单查看","path":"singleorderview","children":[]},{"id":303,"authName":"单个订单编辑","path":"singleorderedit","children":[]}]},{"id":500,"authName":"个人信息","path":None,"children":[{"id":501,"authName":"个人信息查看","path":"myinfo","children":[]},{"id":502,"authName":"个人信息修改","path":"myinfoedit","children":[]},{"id":503,"authName":"个人数据看板","path":"mydashboard","children":[]}]}]})
     elif finduser.Type == 4:
-        return JsonResponse()
+        return JsonResponse({"StatusCode":200,"List":[{"id":100,"authName":"用户功能","path":None,"children":[{"id":101,"authName":"点菜","path":"makeorder","children":[]},{"id":102,"authName":"购物车管理","path":"cartview","children":[]}]},{"id":200,"authName":"菜单管理","path":None,"children":[{"id":201,"authName":"食品列表","path":"menuview","children":[]},{"id":202,"authName":"单个菜品查看","path":"foodview","children":[]},{"id":203,"authName":"单个菜品编辑","path":"foodedit","children":[]},{"id":204,"authName":"增加单个菜品","path":"addfood","children":[]}]},{"id":300,"authName":"订单管理","path":None,"children":[{"id":301,"authName":"订单列表","path":"orderlist","children":[]},{"id":302,"authName":"单个订单查看","path":"singleorderview","children":[]},{"id":303,"authName":"单个订单编辑","path":"singleorderedit","children":[]},{"id":304,"authName":"可用配送员查看","path":"deliverystaffview","children":[]},{"id":305,"authName":"通知配送","path":"deliverypush","children":[]}]},{"id":400,"authName":"用户管理","path":None,"children":[{"id":401,"authName":"用户列表","path":"userlist","children":[]},{"id":402,"authName":"单个用户查看","path":"userview","children":[]},{"id":403,"authName":"单个用户修改","path":"useredit","children":[]}]},{"id":500,"authName":"个人信息","path":None,"children":[{"id":501,"authName":"个人信息查看","path":"myinfo","children":[]},{"id":502,"authName":"个人信息修改","path":"myinfoedit","children":[]},{"id":503,"authName":"个人数据看板","path":"mydashboard","children":[]}]}]})
     return JsonResponse({'StatusCode': 418})
 
 def Login(request):
