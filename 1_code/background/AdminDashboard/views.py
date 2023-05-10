@@ -1,11 +1,34 @@
 import json
 
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from databaseManagementLocal.models import User, Order, Menu
 from django.db.models import *
 
+def UserCreate(request):
+    if request.method != 'POST':
+        return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
+    try:
+        SessionToken = request.POST.get('SessionToken', None)
+        inputName = request.POST.get('Name', None)
+        inputPhone = request.POST.get('Phone', None)
+        inputPassword = request.POST.get('Password', None)
+        password = str(make_password(inputPassword))
+        inputType = request.POST.get('Type',1)
+        SecretKey = request.POST.get('SecretKey', None)
+        if SecretKey is None or inputName is None or inputPhone is None or inputPassword is None:
+            return JsonResponse({'StatusCode': 418})
+    except:
+        return JsonResponse({'StatusCode': 418})
+    res = User.objects.create(username=inputName,
+                              Name=inputName,
+                               Phone=inputPhone,
+                               password=password,
+                               SecretKey=SecretKey,
+                              Type = int(inputType))
+    return JsonResponse({'StatusCode': 200, 'UID': res.UID})
 
 # Create your views here.
 def UserView(request):
@@ -15,14 +38,18 @@ def UserView(request):
         SessionToken = request.POST.get('SessionToken', None)
         inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
-        if SessionToken is None or inputUID is None or SecretKey is None:
+        if SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
-    FindUser = User.objects.values()
+    if inputUID is not None:
+        inputUID = int(inputUID)
+        FindUser = User.objects.values().filter(UID = inputUID)
+    else:
+        FindUser = User.objects.values()
     FindUser = list(FindUser)
     for i in range(len(FindUser)):
-        FindUser[i] = {'UID': FindUser[i]['UID'], 'UserType': FindUser[i]['Type']}
+        FindUser[i] = {'UID': FindUser[i]['UID'], 'LastLogin':FindUser[i]['last_login'], 'is_sctive':FindUser[i]['is_active'], 'Address': FindUser[i]['Address'], 'UserName':FindUser[i]['Name'], 'UserType': '用户' if FindUser[i]['Type'] == 1 else ('入驻商户' if FindUser[i]['Type'] ==2 else ('配送员' if FindUser[i]['Type'] == 3 else '系统管理员'))}
     return JsonResponse({
         'StatusCode': 200,
         'UserList': FindUser
@@ -37,7 +64,7 @@ def SingleUserView(request):
         inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
         inputTargetUID = request.POST.get('TargetUserUID', None)
-        if SessionToken is None or inputUID is None or SecretKey is None or inputTargetUID is None:
+        if SecretKey is None or inputTargetUID is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
@@ -48,7 +75,6 @@ def SingleUserView(request):
     return JsonResponse({
         'StatusCode': 200,
         'UID': FindUser.UID,
-        'PasswordHash': FindUser.Password,
         'Name': FindUser.Name,
         'Phone': FindUser.Phone,
         'UserName': FindUser.Name,
@@ -66,13 +92,73 @@ def SingleUserView(request):
         'CustomerSum': FindUser.CustomerSum
     })
 
+def DeleteUser(request):
+    if request.method != 'POST':
+        return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
+    try:
+        SecretKey = request.POST.get('SecretKey', None)
+        inputTargetUID = request.POST.get('TargetUserUID', None)
+        if SecretKey is None or inputTargetUID is None:
+            return JsonResponse({'StatusCode': 418})
+    except:
+        return JsonResponse({'StatusCode': 418})
+    try:
+        FindUser = User.objects.get(Q(SecretKey=SecretKey) & Q(Type=4))
+    except:
+        return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
+    try:
+        FindUser = User.objects.get(Q(UID=inputTargetUID))
+    except:
+        return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
+    FindUser.delete()
+    return JsonResponse({'StatusCode': 200})
+
+def DeleteFood(request):
+    if request.method != 'POST':
+        return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
+    try:
+        SecretKey = request.POST.get('SecretKey', None)
+        inputTargetUID = request.POST.get('TargetFoodID', None)
+        if SecretKey is None or inputTargetUID is None:
+            return JsonResponse({'StatusCode': 418})
+    except:
+        return JsonResponse({'StatusCode': 418})
+    try:
+        FindUser = User.objects.get(Q(SecretKey=SecretKey))
+    except:
+        return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
+    try:
+        FindFood = Menu.objects.get(Q(FoodID=inputTargetUID))
+    except:
+        return JsonResponse({'StatusCode': 401, 'msg': '无此食物'})
+    FindFood.delete()
+    return JsonResponse({'StatusCode': 200})
+
+def DeleteOrder(request):
+    if request.method != 'POST':
+        return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
+    try:
+        SecretKey = request.POST.get('SecretKey', None)
+        inputTargetUID = request.POST.get('TargetUserUID', None)
+        if SecretKey is None or inputTargetUID is None:
+            return JsonResponse({'StatusCode': 418})
+    except:
+        return JsonResponse({'StatusCode': 418})
+    try:
+        FindUser = User.objects.get(Q(SecretKey=SecretKey) & Q(Type=4))
+    except:
+        return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
+    try:
+        FindOrder = Order.objects.get(Q(OrderNumber=inputTargetUID))
+    except:
+        return JsonResponse({'StatusCode': 401, 'msg': '无此订单'})
+    FindOrder.delete()
+    return JsonResponse({'StatusCode': 200})
 
 def ModifyUser(request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
-        inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
         inputTargetUID = request.POST.get('TargetUserUID', None)
         inputName = request.POST.get('Name', None)
@@ -84,7 +170,8 @@ def ModifyUser(request):
         inputAddress = request.POST.get('Address', None)
         inputUserName = request.POST.get('UserName', None)
         inputCart = request.POST.get('Cart', None)
-        if SessionToken is None or inputUID is None or SecretKey is None or inputTargetUID is None:
+        inputactive = request.POST.get('is_active', None)
+        if SecretKey is None or inputTargetUID is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
@@ -110,6 +197,10 @@ def ModifyUser(request):
         finduser.Name = inputUserName
     if inputCart is not None:
         finduser.Cart = inputCart
+    if inputactive == 'true':
+        finduser.is_active = True
+    if inputactive == 'false':
+        finduser.is_active = False
     finduser.save()
     return JsonResponse({'StatusCode': 200, 'UID': finduser.UID})
 
@@ -118,11 +209,10 @@ def MenuView(request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
         inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
         TargetShopUID = request.POST.get('TargetShopUID',None)
-        if SessionToken is None or inputUID is None or SecretKey is None:
+        if  SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
@@ -143,16 +233,15 @@ def AddMenu (request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
         inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
-        inputFoodPhoto = request.FILES.get('FoodPhoto', None)
+        # inputFoodPhoto = request.FILES.get('FoodPhoto', None)
         imputMoney = request.POST.get('Money', None)
         inputDiscount = request.POST.get('Discount', None)
-        if SessionToken is None or inputUID is None or SecretKey is None or imputMoney is None or inputDiscount is None:
+        if inputUID is None or SecretKey is None or imputMoney is None or inputDiscount is None:
             return JsonResponse({'StatusCode': 418})
-        if inputFoodPhoto is None:
-            return JsonResponse({'StatusCode': 401, 'msg': '图片不对'})
+        # if inputFoodPhoto is None:
+        #     return JsonResponse({'StatusCode': 401, 'msg': '图片不对'})
     except:
         return JsonResponse({'StatusCode': 418})
     try:
@@ -160,7 +249,7 @@ def AddMenu (request):
     except:
         return JsonResponse({'StatusCode': 401, 'msg': '无此店家'})
     res = Menu.objects.create(ShopID=FindUser,
-                               FoodPhoto=inputFoodPhoto,
+                               # FoodPhoto=inputFoodPhoto,
                                Money=imputMoney,
                                Discount=inputDiscount)
     return JsonResponse({
@@ -170,14 +259,13 @@ def ModifyMenu(request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
         inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
         inputFoodID = request.POST.get('FoodID', None)
         inputFoodPhoto = request.FILES.get('FoodPhoto', None)
         imputMoney = request.POST.get('Money', None)
         inputDiscount = request.POST.get('Discount', None)
-        if SessionToken is None or inputUID is None or SecretKey is None:
+        if inputUID is None or SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
@@ -202,10 +290,9 @@ def OrderListView(request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
         inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
-        if SessionToken is None or inputUID is None or SecretKey is None:
+        if SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
@@ -213,9 +300,15 @@ def OrderListView(request):
         FindOrder = Order.objects.values().order_by(F('OrderNumber').desc())
     except:
         return JsonResponse({'StatusCode': 401, 'msg': '无订单'})
+    if inputUID is not None:
+        FindOrder = FindOrder.filter(OrderNumber=inputUID)
+        return JsonResponse({
+            'StatusCode': 200,
+            'OrderList': list(FindOrder)
+        })
     FindOrder = list(FindOrder)
     for i in range(len(FindOrder)):
-        FindOrder[i] = FindOrder[i]['OrderNumber']
+        FindOrder[i] = {'OrderNumber': FindOrder[i]['OrderNumber'], 'UID': FindOrder[i]['UserUID_id'], 'Address': FindOrder[i]['Address'], 'Phone': FindOrder[i]['Phone'], 'Notes': FindOrder[i]['Notes'], 'MoneySum': FindOrder[i]['MoneySum'], 'Cart': FindOrder[i]['Cart']}
     return JsonResponse({
         'StatusCode': 200,
         'OrderList': list(FindOrder)
@@ -228,11 +321,9 @@ def CheckOrder(request):
     if request.method != 'POST':
         return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
     try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
-        SessionToken = request.POST.get('SessionToken', None)
-        inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
         inputOrderNumber = request.POST.get('OrderNumber', None)
-        if SessionToken is None or inputUID is None or SecretKey is None or inputOrderNumber is None:
+        if SecretKey is None or inputOrderNumber is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
@@ -251,6 +342,7 @@ def CheckOrder(request):
             return JsonResponse({'StatusCode': 401, 'msg': '订单信息错误'})
         return JsonResponse({
             'StatusCode': 200,
+            'UserUID': findOrder.UserUID_id,
             'OrderNumber': findOrder.OrderNumber,
             'Address': findOrder.Address,
             'Phone': findOrder.Phone,
@@ -269,6 +361,7 @@ def CheckOrder(request):
     elif findOrder.DeliveryState == 0 or findOrder.DeliveryState == 1:
         return JsonResponse({
             'StatusCode': 200,
+            'UserUID': findOrder.UserUID_id,
             'OrderNumber': findOrder.OrderNumber,
             'Address': findOrder.Address,
             'Phone': findOrder.Phone,
@@ -291,8 +384,6 @@ def ModifyOrder(request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
-        inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
         inputOrderNumber = request.POST.get('OrderNumber',None)
         inputAddress = request.POST.get('Address',None)
@@ -303,8 +394,7 @@ def ModifyOrder(request):
         inputShopUID = request.POST.get('ShopUID',None)
         inputDeliveryStaffUID = request.POST.get('DeliveryStaffUID',None)
         inputDeliveryState = request.POST.get('DeliveryState',None)
-        inputCart = json.loads(request.POST.get('Cart',None))
-        if SessionToken is None or inputUID is None or SecretKey is None or inputOrderNumber is None:
+        if SecretKey is None or inputOrderNumber is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
@@ -328,8 +418,6 @@ def ModifyOrder(request):
         FindOrder.DeliveryStaffUID = inputDeliveryStaffUID
     if inputDeliveryState is not None:
         FindOrder.DeliveryState = inputDeliveryState
-    if inputCart is not None:
-        FindOrder.Cart = inputCart
     FindOrder.MoneySum = 0.0
     Cart = FindOrder.Cart['CartNember']
     for each in Cart:

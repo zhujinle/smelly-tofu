@@ -4,6 +4,11 @@ import Login from '../components/Log-in.vue'
 import Home from '../components/home.vue'
 import Welcome from '../components/Welcome.vue'
 import userlist from '../components/user/userlist.vue'
+import orderlist from '../components/order/orderlist.vue'
+import menuview from '../components/menu/menuview.vue'
+import deliverystaffview from '../components/order/deliverystaffview.vue'
+import cartview from '../components/user/cartview.vue'
+import makeorder from '../components/user/makeorder.vue'
 
 Vue.use(VueRouter)
 
@@ -17,7 +22,12 @@ const router = new VueRouter({
       redirect: '/Welcome',
       children: [
         { path: '/Welcome', component: Welcome },
-        { path: '/userlist', component: userlist }
+        { path: '/userlist', component: userlist },
+        { path: '/orderlist', component: orderlist },
+        { path: '/menuview', component: menuview },
+        { path: '/deliverystaffview', component: deliverystaffview },
+        { path: '/cartview', component: cartview },
+        { path: '/makeorder', component: makeorder }
       ]
     }
   ]

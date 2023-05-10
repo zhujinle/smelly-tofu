@@ -33,4 +33,9 @@ urlpatterns = [
     path('DeliveryPush/', DeliveryPush ),
     path('DashboardView/', DashboardView),
     path('AddMenu/', AddMenu),
+    path('UserCreate/', UserCreate),
+    path('DeleteUser/', DeleteUser),
+    path('DeleteFood/', DeleteFood),
+    path('DeleteOrder/', DeleteOrder),
+
 ]
