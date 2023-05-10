@@ -3,10 +3,10 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item><a href="/">用户管理</a></el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      <el-breadcrumb-item><a href="/">订单管理</a></el-breadcrumb-item>
+      <el-breadcrumb-item>订单列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <!-- 添加用户对话框 -->
+    <!-- 添加订单对话框 -->
     <el-dialog title="添加用户" :visible.sync="adddialogVisible" width="50%">
         <span>用户信息输入</span>
         <el-form ref="AddFormRef" :model="AddForm" :rules="AddFormrules">
@@ -41,17 +41,20 @@
     </el-dialog>
     <!-- 修改用户对话框 -->
     <el-dialog title="用户信息修改" :visible.sync="EditdialogVisible" width="50%">
-        <span>这是一段信息</span>
+        <span>订单信息修改</span>
         <el-form ref="EditFormRef" :model="EditForm">
-                <el-form-item label="昵称" prop="username">
-                    <el-input v-model="EditForm.Name" type="Name" prefix-icon="el-icon-user"></el-input>
+                <el-form-item label="收件地址" prop="Address">
+                    <el-input v-model="EditForm.Address" type="Name" prefix-icon="el-icon-user"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号" prop="phone">
+                <el-form-item label="联系方式" prop="phone">
                     <el-input v-model="EditForm.Phone" prefix-icon="el-icon-user"></el-input>
                 </el-form-item>
-                <el-form-item label="用户类型选择" prop="Type">
+                <el-form-item label="备注">
+                    <el-input v-model="EditForm.Notes" prefix-icon="el-icon-user"></el-input>
+                </el-form-item>
+                <el-form-item label="用户支付方式选择" prop="Type">
                     <template>
-                    <el-select v-model="EditForm.UserType" placeholder="请选择用户类型">
+                    <el-select v-model="EditForm.Payment" placeholder="请选择支付方式">
                       <el-option
                       v-for="item in options"
                       :key="item.value"
@@ -61,9 +64,9 @@
                     </el-select>
                     </template>
                 </el-form-item>
-                <el-form-item label="用户等级选择" prop="Type">
+                <el-form-item label="订单状态" prop="Type">
                     <template>
-                    <el-select v-model="EditForm.MenberStatus" placeholder="请选择用户等级">
+                    <el-select v-model="EditForm.DeliveryStatus" placeholder="请选择用户等级">
                       <el-option
                       v-for="item in options2"
                       :key="item.value"
@@ -73,12 +76,6 @@
                     </el-select>
                     </template>
                 </el-form-item>
-                <el-form-item label="地址" prop="phone">
-                    <el-input v-model="EditForm.Address" prefix-icon="el-icon-user"></el-input>
-                </el-form-item>
-                <el-form-item label="购物车(JSON形式)" prop="phone">
-                    <el-input v-model="EditForm.Cart" prefix-icon="el-icon-user"></el-input>
-                </el-form-item>
         </el-form>
         <!-- 页脚 -->
         <span slot="footer" class="dialog-footer">
@@ -87,105 +84,105 @@
         </span>
     </el-dialog>
     <!-- 用户信息视图 -->
-    <el-dialog title="用户信息" :visible.sync="dialogTableVisible">
-        <el-descriptions class="margin-top" title="用户详细信息表" :column="3" border>
+    <el-dialog title="订单信息" :visible.sync="dialogTableVisible">
+        <el-descriptions class="margin-top" title="订单详细信息表" :column="3" border>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-user"></i>
                 UID
             </template>
-            {{this.SingleUserInfo.UID}}
+            {{this.SingleOrderInfo.UserUID}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-user"></i>
-                用户名
+                订单ID
             </template>
-            {{this.SingleUserInfo.Name}}
+            {{this.SingleOrderInfo.OrderNumber}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-mobile-phone"></i>
-                手机号
+                联系方式
             </template>
-            {{SingleUserInfo.Phone}}
+            {{SingleOrderInfo.Phone}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-mobile-phone"></i>
-                头像
+                地址
             </template>
-            <el-avatar :src="SingleUserInfo.AvatarUrl"></el-avatar>
+            {{SingleOrderInfo.Address}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-location-outline"></i>
-                地址
+                备注
             </template>
-            {{SingleUserInfo.Address}}
+            {{SingleOrderInfo.Notes}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-tickets"></i>
-                类型
+                付款方式
             </template>
-            <el-tag size="small">{{SingleUserInfo.UserType}}</el-tag>
+            <el-tag size="small">{{SingleOrderInfo.Payment}}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
-                会员等级
+                付款标记
             </template>
-            <el-tag size="small">{{SingleUserInfo.MenberStatus}}</el-tag>
+            <el-tag size="small">{{SingleOrderInfo.PayStatus}}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
-                每日顾客
+                商店地址
             </template>
-            {{SingleUserInfo.CustomerDaily}}
+            {{SingleOrderInfo.ShopAddress}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
-                总顾客
+                商店联系方式
             </template>
-            {{SingleUserInfo.CustomerSum}}
+            {{SingleOrderInfo.ShopPhone}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
-                证照
+                配送员姓名
             </template>
-            <el-link type="info" :href="SingleUserInfo.License">链接</el-link>
+            {{SingleOrderInfo.DeliveryStaffName}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
-                每日收入
+                配送员联系方式
             </template>
-            {{SingleUserInfo.MoneyDaily}}
+            {{SingleOrderInfo.DeliveryStaffPhone}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
-                每月收入
+                配送状态
             </template>
-            {{SingleUserInfo.MoneyMonthly}}
+            {{SingleOrderInfo.DeliveryStatus}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
-                总收入
+               购物车内容
             </template>
-            {{SingleUserInfo.MoneySum}}
+            {{SingleOrderInfo.CartMenber}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-office-building"></i>
-                购物车信息
+                总金额
             </template>
-            {{SingleUserInfo.Cart}}
+            {{SingleOrderInfo.MoneySum}}
             </el-descriptions-item>
         </el-descriptions>
     </el-dialog>
@@ -194,50 +191,45 @@
       <!-- 搜索 -->
       <el-row :gutter="20">
         <el-col :span="7">
-            <el-input placeholder="请输入UID" v-model="inputUID" clearable @clear="getuserlist">
-                <el-button slot="append" icon="el-icon-search" @click="getuserlist"></el-button>
+            <el-input placeholder="请输入OrderID" v-model="inputUID" clearable @clear="getOrderlist">
+                <el-button slot="append" icon="el-icon-search" @click="getOrderlist"></el-button>
             </el-input>
         </el-col>
         <el-col :span="4">
-            <el-button type="primary" @click="adddialogVisible = true">添加用户</el-button>
+            <el-button type="primary" @click="adddialogVisible = true">下订单</el-button>
         </el-col>
       </el-row>
 
-      <!-- 用户列表 -->
+      <!-- 订单列表 -->
       <template>
         <el-table :data="UserList" stripe style="width: 100%">
-            <el-table-column prop="UID" label="UID" width="60"></el-table-column>
-            <el-table-column prop="UserName" label="姓名" width="150"></el-table-column>
-            <el-table-column prop="UserType" label="类型" width="180"></el-table-column>
+            <el-table-column prop="UID" label="订单创建者UID" width="60"></el-table-column>
+            <el-table-column prop="OrderNumber" label="订单号" width="80"></el-table-column>
+            <el-table-column prop="Phone" label="联系方式" width="120"></el-table-column>
             <el-table-column prop="Address" label="地址" width="380"></el-table-column>
-            <el-table-column prop="LastLogin" label="最后一次登录" width="280"></el-table-column>
-            <el-table-column prop="is_sctive" label="状态" width="100">
-                <template slot-scope="scope">
-                    <el-switch
-                        v-model="scope.row.is_sctive"
-                        active-color="#13ce66"
-                        inactive-color="#ff4949"
-                        @change="UserStateChange(scope.row)">
-                    </el-switch>
-                </template>
-            </el-table-column>
+            <el-table-column prop="Notes" label="备注" width="280"></el-table-column>
+            <el-table-column prop="MoneySum" label="总金额" width="80"></el-table-column>
             <el-table-column label="操作" fixed="right" width="200">
                 <template slot-scope="scope">
                     <!-- 查看 -->
                     <el-tooltip effect="dark" content="查看信息" placement="top" :enterable="false">
-                        <el-button type="primary" icon="el-icon-view" size="mini" @click="GetUserInfo(scope.row)" ></el-button>
+                        <el-button type="primary" icon="el-icon-view" size="mini" @click="GetOrderInfo(scope.row)" ></el-button>
                     </el-tooltip>
                     <!-- 修改 -->
                     <el-tooltip effect="dark" content="修改信息" placement="top" :enterable="false">
                         <el-button type="warning" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)"></el-button>
                     </el-tooltip>
                     <!-- 删除 -->
-                    <el-tooltip effect="dark" content="删除用户" placement="top" :enterable="false">
+                    <el-tooltip effect="dark" content="删除订单" placement="top" :enterable="false">
                         <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteuser(scope.row)"></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
-            <el-table-column prop="Cart" label="购物车"></el-table-column>
+            <el-table-column label="购物车">
+              <template slot-scope="scope">
+              {{ scope.row.Cart }}
+              </template>
+            </el-table-column>
         </el-table>
         </template>
     </el-card>
@@ -249,11 +241,12 @@ export default {
   data () {
     return {
       UserList: [],
+      Orderlist: [],
       inputUID: '',
       dialogTableVisible: false,
       adddialogVisible: false,
       EditdialogVisible: false,
-      SingleUserInfo: [],
+      SingleOrderInfo: [],
       AddForm: {
         Name: '',
         password: '',
@@ -262,45 +255,23 @@ export default {
         secretkey: '1'
       },
       EditForm: {
-        Name: '',
         Phone: '',
-        UserType: '',
-        MenberStatus: '',
         Address: '',
-        Cart: ''
+        Notes: '',
+        Payment: '',
+        DeliveryStaffName: '',
+        DeliveryStaffPhone: '',
+        DeliveryStatus: ''
       },
-      options: [{
-        value: '1',
-        label: '普通用户'
-      }, {
-        value: '2',
-        label: '入驻商家'
-      }, {
-        value: '3',
-        label: '配送员'
-      }, {
-        value: '4',
-        label: '系统管理员'
-      }],
-      options2: [{
-        value: '1',
-        label: 'Cu'
-      }, {
-        value: '2',
-        label: 'Ag'
-      }, {
-        value: '3',
-        label: 'Au'
-      }, {
-        value: '4',
-        label: 'Diamond'
-      }],
       AddFormrules: {
-        username: [
+        Address: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        ShopAddress: [
+          { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         phone: [
           { required: true, message: '请输入手机号', trigger: 'blur' }
@@ -308,36 +279,53 @@ export default {
         Type: [
           { required: true, message: '请选择用户类型', trigger: 'blur' }
         ]
-      }
+      },
+      options: [{
+        value: '1',
+        label: 'AliPay'
+      }, {
+        value: '2',
+        label: 'Wechat'
+      }, {
+        value: '3',
+        label: 'Balance'
+      }],
+      options2: [{
+        value: '0',
+        label: 'NoJieDan'
+      }, {
+        value: '1',
+        label: 'NoDeliveryStaff'
+      }, {
+        value: '2',
+        label: 'NoQuCan'
+      }, {
+        value: '3',
+        label: 'QuCaning'
+      }, {
+        value: '4',
+        label: 'OnRoad'
+      }, {
+        value: '5',
+        label: 'Done'
+      }]
     }
   },
   created () {
-    this.getuserlist()
+    this.getOrderlist()
   },
   methods: {
     ResetAddForm () {
       this.$refs.AddFormRef.resetFields()
     },
-    async getuserlist () {
+    async getOrderlist () {
       const params = new URLSearchParams()
       params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
       if (this.inputUID !== '') params.append('UID', this.inputUID)
-      const res = await this.$http.post('Admin/UserView/', params)
+      const res = await this.$http.post('Admin/OrderListView/', params)
       if (res.data.StatusCode !== 200) return this.$message.error('信息错误！')
-      this.UserList = res.data.UserList
-    },
-    // 修改状态信息
-    async UserStateChange (userinfo) {
-      const params = new URLSearchParams()
-      params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
-      params.append('TargetUserUID', userinfo.UID)
-      params.append('is_active', userinfo.is_sctive)
-      const res = await this.$http.post('Admin/ModifyUser/', params)
-      if (res.data.StatusCode !== 200) {
-        userinfo.is_sctive = !userinfo.is_sctive
-        return this.$message.error('保存失败！')
-      }
-      this.$message.success('保存成功！')
+      this.UserList = res.data.OrderList
+      console.log(this.UserList)
     },
     AddUser () {
       this.adddialogVisible = false
@@ -350,75 +338,68 @@ export default {
         params.append('Type', this.AddForm.Type)
         params.append('SecretKey', this.AddForm.SecreyKey)
         const res = await this.$http.post('Admin/UserCreate/', params)
-        console.log(res)
         if (res.data.StatusCode !== 200) return this.$message.error('注册失败！可能用户名已存在')
-        console.log(res)
         this.$message.success('注册成功！')
-        this.getuserlist()
+        this.getOrderlist()
       })
     },
     // 获取用户信息
-    async GetUserInfo (userinfo) {
+    async GetOrderInfo (Orderinfo) {
       this.dialogTableVisible = true
       const params = new URLSearchParams()
       params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
-      params.append('TargetUserUID', userinfo.UID)
-      const res = await this.$http.post('Admin/SingleUserView/', params)
+      params.append('OrderNumber', Orderinfo.OrderNumber)
+      const res = await this.$http.post('Admin/CheckOrder/', params)
       if (res.data.StatusCode !== 200) {
         return this.$message.error('获取失败！')
       }
       this.$message.success('获取成功！')
-      this.SingleUserInfo = res.data
-      console.log(this.SingleUserInfo)
+      this.SingleOrderInfo = res.data
+      console.log(this.SingleOrderInfo)
     },
-    async showEditDialog (userinfo) {
+    async showEditDialog (Orderinfo) {
       const params = new URLSearchParams()
       params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
-      params.append('TargetUserUID', userinfo.UID)
-      const res = await this.$http.post('Admin/SingleUserView/', params)
+      params.append('OrderNumber', Orderinfo.OrderNumber)
+      const res = await this.$http.post('Admin/CheckOrder/', params)
       if (res.data.StatusCode !== 200) {
         return this.$message.error('获取失败！')
       }
       this.$message.success('获取成功！')
       this.EditForm = res.data
-      if (this.EditForm.MenberStatus === 'Cu') this.EditForm.MenberStatus = 1
-      if (this.EditForm.MenberStatus === 'Ag') this.EditForm.MenberStatus = 2
-      if (this.EditForm.MenberStatus === 'Au') this.EditForm.MenberStatus = 3
-      if (this.EditForm.MenberStatus === 'Diamond') this.EditForm.MenberStatus = 4
-      if (this.EditForm.UserType === 'Admin') this.EditForm.UserType = 4
-      if (this.EditForm.UserType === 'DeliveryStaff') this.EditForm.UserType = 3
-      if (this.EditForm.UserType === 'Seller') this.EditForm.UserType = 2
-      if (this.EditForm.UserType === 'Customer') this.EditForm.UserType = 1
+      console.log(this.EditForm)
       this.EditdialogVisible = true
     },
     async pushEditDialog () {
       const params2 = new URLSearchParams()
       params2.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
-      params2.append('TargetUserUID', this.EditForm.UID)
-      params2.append('Name', this.EditForm.Name)
-      params2.append('Phone', this.EditForm.Phone)
-      params2.append('Type', this.EditForm.UserType)
-      params2.append('MemberType', this.EditForm.MenberStatus)
+      params2.append('OrderNumber', this.EditForm.OrderNumber)
       params2.append('Address', this.EditForm.Address)
-      params2.append('Cart', this.EditForm.Cart)
-      const res2 = await this.$http.post('Admin/ModifyUser/', params2)
+      params2.append('Phone', this.EditForm.Phone)
+      params2.append('Notes', this.EditForm.Notes)
+      params2.append('Payment', this.EditForm.Payment)
+      params2.append('DeliveryState', this.EditForm.DeliveryStatus)
+      const res2 = await this.$http.post('Admin/ModifyOrder/', params2)
       this.EditdialogVisible = false
       if (res2.data.StatusCode !== 200) {
+        console.log(res2)
         return this.$message.error('保存失败！')
       }
       this.$message.success('保存成功！')
     },
-    async deleteuser (userinfo) {
+    async deleteuser (Orderinfo) {
       const params2 = new URLSearchParams()
       params2.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
-      params2.append('TargetUserUID', userinfo.UID)
-      const res2 = await this.$http.post('Admin/DeleteUser/', params2)
+      params2.append('TargetUserUID', Orderinfo.OrderNumber)
+      console.log(Orderinfo)
+      const res2 = await this.$http.post('Admin/DeleteOrder/', params2)
       this.EditdialogVisible = false
       if (res2.data.StatusCode !== 200) {
+        console.log(res2)
         return this.$message.error('删除失败！')
       }
       this.$message.success('删除成功！')
-      this.getuserlist()
+      this.getOrderlist()
     }
   }
 }

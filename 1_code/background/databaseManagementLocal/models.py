@@ -65,7 +65,7 @@ class Menu(models.Model):
         # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
         return 'uploads/user_{0}_Foods_{1}.jpg'.format(self.ShopID, filename)
 
-    FoodPhoto = models.ImageField(upload_to=user_directory_path)
+    FoodPhoto = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
     # Money
     Money = models.FloatField(max_length=10)
     # Discount

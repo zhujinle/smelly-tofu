@@ -208,27 +208,28 @@ def DeliveryStaffList(request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
         inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
-        if SessionToken is None or inputUID is None or SecretKey is None:
+        if SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
     try:
-        FindUser = User.objects.get(Q(UID=inputUID) & Q(Type=2) & Q(SecretKey = SecretKey))
+        FindUser = User.objects.get(Q(SecretKey = SecretKey))
     except:
         return JsonResponse({'StatusCode': 401, 'msg': '无此店家'})
     try:
         FindDeliveryStaff = User.objects.filter(Type=3)
     except:
         return JsonResponse({'StatusCode': 401, 'msg': '无可用配送员'})
+    if inputUID is not None:
+        FindDeliveryStaff = FindDeliveryStaff.filter(UID=inputUID)
     FindDeliveryStaff = list(FindDeliveryStaff)
     for i in range(len(FindDeliveryStaff)):
-        FindDeliveryStaff[i] = {'UID': FindDeliveryStaff[i].UID, 'Name': FindDeliveryStaff[i].Name}
+        FindDeliveryStaff[i] = {'UID': FindDeliveryStaff[i].UID, 'Name': FindDeliveryStaff[i].Name, 'Phone': FindDeliveryStaff[i].Phone, 'Member': FindDeliveryStaff[i].get_Member_display(), 'is_active': FindDeliveryStaff[i].is_active}
     return JsonResponse({
         'StatusCode': 200,
-        'OrderList': FindDeliveryStaff
+        'UserList': FindDeliveryStaff
     })
 
 

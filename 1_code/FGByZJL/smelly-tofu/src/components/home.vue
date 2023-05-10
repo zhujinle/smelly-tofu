@@ -78,10 +78,8 @@ export default {
       const params = new URLSearchParams()
       params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
       const res = await this.$http.post('GetMenuList', params)
-      console.log(res)
       if (res.data.StatusCode !== 200) return this.$message.error('信息错误！')
       this.MenuList = res.data.List
-      console.log(this.MenuList)
     },
     toggleCallapse () {
       this.isCollapse = !this.isCollapse
