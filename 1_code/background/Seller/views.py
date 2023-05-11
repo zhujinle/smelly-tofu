@@ -69,10 +69,11 @@ def ModifyInformation(request):
 
 
 def MenuView(request):
-    if request.method != 'GET':
+    if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        inputUID = request.GET.get('UID', None)
+        inputUID = request.POST.get('UID', None)
+        inputFoodID = request.POST.get('FoodID', None)
         if inputUID is None:
             return JsonResponse({'StatusCode': 418})
     except:
@@ -85,7 +86,11 @@ def MenuView(request):
         FindMenu = Menu.objects.filter(Q(ShopID=FindUser)).order_by(F('FoodID').desc())
     except:
         return JsonResponse({'StatusCode': 401, 'msg': '无菜单'})
-    FindMenu = list(FindMenu.values())
+    if inputFoodID is not None:
+        FindMenu = Menu.objects.get(FoodID=inputFoodID)
+        FindMenu = {'ShopID': FindMenu.ShopID.UID, 'FoodID': FindMenu.FoodID, 'FoodPhoto': '' if FindMenu.FoodPhoto.name == '' else FindMenu.FoodPhoto.url, 'Money': FindMenu.Money, 'Discount': FindMenu.Discount, 'Checked': False}
+    else:
+        FindMenu = list(FindMenu.values())
     return JsonResponse({
         'StatusCode': 200,
         'Menu': FindMenu

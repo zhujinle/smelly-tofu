@@ -30,5 +30,7 @@ urlpatterns = [
     path('OrderList/', OrderList),
     path('CheckOrder/', CheckOrder),
     path('ConfirmOrder/', ConfirmOrder),
+    path('SellerList/', SellerList),
+    path('FoodList/', FoodList),
 
 ]

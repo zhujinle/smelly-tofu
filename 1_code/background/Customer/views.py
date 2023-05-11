@@ -75,34 +75,74 @@ def ViewShoppingCart(request):
     if request.method != 'POST':
         return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
     try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
-        SessionToken = request.POST.get('SessionToken', None)
-        inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
-        if SessionToken is None or inputUID is None or SecretKey is None:
+        if SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
     try:
-        finduser = User.objects.get(Q(SecretKey=SecretKey) & Q(UID=inputUID))
+        finduser = User.objects.get(Q(SecretKey=SecretKey))
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     return JsonResponse({'StatusCode': 200, 'CartMenber': finduser.Cart})
+
+def SellerList(request):
+    # 将请求参数统一放入request 的 params 属性中，方便后续处理
+    # 非POST请求
+    if request.method != 'POST':
+        return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
+    try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
+        SecretKey = request.POST.get('SecretKey', None)
+        if SecretKey is None:
+            return JsonResponse({'StatusCode': 418})
+    except:
+        return JsonResponse({'StatusCode': 418})
+    try:
+        finduser = User.objects.filter(Q(Type=2)).values()
+    except User.DoesNotExist:
+        return JsonResponse({'StatusCode': 401, 'msg': '无商家'})
+    finduser = list(finduser)
+    for i in range(len(finduser)):
+        finduser[i] = {'ShopUID': finduser[i]['UID'], 'ShopName': finduser[i]['Name']}
+    return JsonResponse({'StatusCode': 200, 'Shops': finduser})
+
+def FoodList(request):
+    # 将请求参数统一放入request 的 params 属性中，方便后续处理
+    # 非POST请求
+    if request.method != 'POST':
+        return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
+    try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
+        SecretKey = request.POST.get('SecretKey', None)
+        inputShopID = request.POST.get('UID', None)
+        if SecretKey is None or inputShopID is None:
+            return JsonResponse({'StatusCode': 418})
+    except:
+        return JsonResponse({'StatusCode': 418})
+    try:
+        finduser = User.objects.get(Q(Type=2) & Q(UID=inputShopID))
+    except User.DoesNotExist:
+        return JsonResponse({'StatusCode': 401, 'msg': '无商家'})
+    try:
+        findFood = Menu.objects.filter(Q(ShopID=finduser)).values()
+    except User.DoesNotExist:
+        return JsonResponse({'StatusCode': 401, 'msg': '无Food'})
+    findFood = list(findFood)
+    return JsonResponse({'StatusCode': 200, 'Foods': findFood})
+
 def ModifyShoppingCart(request):
     # 将请求参数统一放入request 的 params 属性中，方便后续处理
     # 非POST请求
     if request.method != 'POST':
         return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
     try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
-        SessionToken = request.POST.get('SessionToken', None)
-        inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
         inputCartMenber = request.POST.get('CartMenber',None)
-        if SessionToken is None or inputUID is None or SecretKey is None or inputCartMenber is None:
+        if SecretKey is None or inputCartMenber is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
     try:
-        finduser = User.objects.get(Q(SecretKey=SecretKey) & Q(UID=inputUID))
+        finduser = User.objects.get(Q(SecretKey=SecretKey))
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     finduser.Cart = inputCartMenber
@@ -112,8 +152,6 @@ def MakeOrder(request):
     if request.method != 'POST':
         return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
     try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
-        inputUID = request.POST.get('UID', None)
-        SessionToken = request.POST.get('SessionToken', None)
         SecretKey = request.POST.get('SecretKey', None)
         Address = request.POST.get('Address', None)
         Phone = request.POST.get('Phone', None)
@@ -121,9 +159,7 @@ def MakeOrder(request):
         Payment = request.POST.get('Payment', None)
         OrderCheck = request.POST.get('OrderCheck',None)
         ShopID = request.POST.get('ShopUID', None)
-        if inputUID is None or \
-                SessionToken is None or \
-                SecretKey is None or \
+        if SecretKey is None or \
                 Address is None or \
                 Phone is None or \
                 Notes is None or \
@@ -134,18 +170,19 @@ def MakeOrder(request):
     except:
         return JsonResponse({'StatusCode': 418})
     try:
-        finduser = User.objects.get(Q(SecretKey=SecretKey) & Q(UID=ShopID))
+        finduser = User.objects.get(Q(SecretKey=SecretKey))
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     try:
-        findShop = User.objects.get(Q(UID=inputUID))
+        findShop = User.objects.get(Q(UID=ShopID))
     except User.DoesNotExist:
         return JsonResponse({'StatusCode': 401, 'msg': '无此店家'})
-    Cart = finduser.Cart['CartNember']
+    Cart = json.loads(finduser.Cart)
+    Cart = Cart['CartNember']
     MoneySum = 0.0
     for each in Cart:
         try:
-            findfood = Menu.objects.get(Q(ShopID__menu=ShopID) & Q(FoodID=each['Foodid']))
+            findfood = Menu.objects.get(Q(FoodID=each['Foodid']))
         except:
             return JsonResponse({'StatusCode': 418, 'msg': '无此食物'})
         MoneySum += findfood.Money*findfood.Discount
@@ -173,10 +210,9 @@ def ConfirmOrder(request):
     if request.method != 'POST':
         return JsonResponse({'ret': 400, 'msg': '不支持该类型http请求'})
     try:  # 处理数据，如果数据被修改不符合加密要求，那就返回418
-        SessionToken = request.POST.get('SessionToken', None)
         SecretKey = request.POST.get('SecretKey', None)
         OrderMenber = request.POST.get('OrderNumber',None)
-        if SessionToken is None or OrderMenber is None or SecretKey is None:
+        if OrderMenber is None or SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})

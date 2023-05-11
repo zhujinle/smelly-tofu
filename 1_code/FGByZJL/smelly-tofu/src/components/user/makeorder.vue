@@ -3,24 +3,40 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item><a href="/">订单管理</a></el-breadcrumb-item>
-      <el-breadcrumb-item>可用配送员查看</el-breadcrumb-item>
+      <el-breadcrumb-item><a href="/">用户功能</a></el-breadcrumb-item>
+      <el-breadcrumb-item>点菜</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片试图 -->
-    <el-row>
-      <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
-        <el-card :body-style="{ padding: '0px' }">
-          <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
-          <div style="padding: 14px;">
-            <span>好吃的汉堡</span>
-            <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button">加入购物车</el-button>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <template>
+          <el-select v-model="ChooseShop" placeholder="请在此选择店铺">
+            <el-option
+              @click.native="getFoodlist()"
+              v-for="item in UserList"
+              :key="item.ShopName"
+              :label="item.ShopName"
+              :value="item.ShopUID" >
+            </el-option>
+          </el-select>
+          <el-button style="float: right;" type="primary" @click="SaveCart()">保存菜单</el-button>
+        </template>
+      </div>
+      <el-row>
+        <el-col :index="item.FoodID + ''" :span="8" v-for="item in FoodList" :key="item.FoodID" >
+          <el-card :body-style="{ padding: '0px'}" class="box_card">
+            <img :src="item.FoodPhoto" class="image" onerror="this.src='https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'">
+            <div style="padding: 14px;">
+              <span>价格：{{item.Money}} ￥</span>
+              <div class="bottom clearfix">
+                <span>折扣系数: {{ item.Discount }}</span>
+                <el-checkbox v-model="item.Checked" label="加入购物车" border></el-checkbox>
+              </div>
             </div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+          </el-card>
+        </el-col>
+      </el-row>
+    </el-card>
   </div>
 </template>
 
@@ -29,41 +45,60 @@ export default {
   data () {
     return {
       UserList: [],
+      FoodList: [],
       inputUID: '',
       dialogTableVisible: false,
       adddialogVisible: false,
       EditdialogVisible: false,
       SingleUserInfo: [],
-      options: [{
-        value: '1',
-        label: '普通用户'
-      }, {
-        value: '2',
-        label: '入驻商家'
-      }, {
-        value: '3',
-        label: '配送员'
-      }, {
-        value: '4',
-        label: '系统管理员'
-      }]
+      ChooseShop: '',
+      CartNember: []
     }
   },
   created () {
-    this.getuserlist()
+    this.getSellerlist()
   },
   methods: {
     ResetAddForm () {
       this.$refs.AddFormRef.resetFields()
     },
-    async getuserlist () {
+    async getSellerlist () {
       const params = new URLSearchParams()
       params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
-      if (this.inputUID !== '') params.append('UID', this.inputUID)
-      const res = await this.$http.post('Seller/DeliveryStaffList/', params)
-      console.log(res)
+      const res = await this.$http.post('Customer/SellerList/', params)
       if (res.data.StatusCode !== 200) return this.$message.error('信息错误！')
-      this.UserList = res.data.UserList
+      this.UserList = res.data.Shops
+      console.log(this.UserList)
+    },
+    async getFoodlist () {
+      const params = new URLSearchParams()
+      params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
+      console.log(this.ChooseShop)
+      params.append('UID', this.ChooseShop)
+      const res = await this.$http.post('Customer/FoodList/', params)
+      if (res.data.StatusCode !== 200) return this.$message.error('信息错误！')
+      this.FoodList = res.data.Foods
+      console.log(this.FoodList)
+    },
+    async SaveCart () {
+      var str = '{"CartNember": ['
+      var bool = false
+      for (var { Checked: c, FoodID: ID } of this.FoodList) {
+        if (c === true) {
+          if (bool === true) {
+            str = str + ', '
+          }
+          str = str + '{"Foodid": ' + ID + '} '
+          bool = true
+        }
+      }
+      str = str + ']}'
+      const params = new URLSearchParams()
+      params.append('SecretKey', window.sessionStorage.getItem('SecretKey'))
+      params.append('CartMenber', str)
+      const res = await this.$http.post('Customer/ModifyShoppingCart/', params)
+      if (res.data.StatusCode !== 200) return this.$message.error('保存失败！')
+      this.$message.success('保存成功！')
     }
   }
 }
@@ -78,7 +113,7 @@ export default {
     margin-top: 13px;
     line-height: 12px;
   }
-  .button {
+  .el-checkbox {
     padding: 0;
     float: right;
   }
@@ -94,4 +129,11 @@ export default {
   .clearfix:after {
       clear: both
   }
+
+  .text {
+  font-size: 14px;
+}
+.box_card{
+  margin-left: 10px;
+}
 </style>
