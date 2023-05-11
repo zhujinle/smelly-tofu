@@ -24,7 +24,7 @@
       <template>
         <el-table :data="UserList" stripe style="width: 100%">
             <el-table-column prop="UID" label="UID" width="60"></el-table-column>
-            <el-table-column prop="UserName" label="姓名" width="150"></el-table-column>
+            <el-table-column prop="Name" label="姓名" width="150"></el-table-column>
             <el-table-column prop="Member" label="等级" width="180"></el-table-column>
             <el-table-column prop="Phone" label="电话" width="380"></el-table-column>
             <el-table-column prop="LastLogin" label="最后一次登录" width="280"></el-table-column>

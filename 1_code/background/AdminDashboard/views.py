@@ -60,7 +60,7 @@ def SingleUserView(request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
+        targetSecretKey = request.POST.get('targetSecretKey', None)
         inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
         inputTargetUID = request.POST.get('TargetUserUID', None)
@@ -68,10 +68,16 @@ def SingleUserView(request):
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})
-    try:
-        FindUser = User.objects.get(Q(UID=inputTargetUID))
-    except:
-        return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
+    if targetSecretKey is not None:
+        try:
+            FindUser = User.objects.get(Q(SecretKey=targetSecretKey))
+        except:
+            return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
+    else:
+        try:
+            FindUser = User.objects.get(Q(UID=inputTargetUID))
+        except:
+            return JsonResponse({'StatusCode': 401, 'msg': '无此用户'})
     return JsonResponse({
         'StatusCode': 200,
         'UID': FindUser.UID,
@@ -471,10 +477,8 @@ def DashboardView(request):
     if request.method != 'POST':
         return JsonResponse({'StatusCode': 400, 'msg': '请求方式错误'})
     try:
-        SessionToken = request.POST.get('SessionToken', None)
-        inputUID = request.POST.get('UID', None)
         SecretKey = request.POST.get('SecretKey', None)
-        if SessionToken is None or inputUID is None or SecretKey is None:
+        if SecretKey is None:
             return JsonResponse({'StatusCode': 418})
     except:
         return JsonResponse({'StatusCode': 418})

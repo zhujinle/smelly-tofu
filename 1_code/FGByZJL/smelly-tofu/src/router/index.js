@@ -9,6 +9,10 @@ import menuview from '../components/menu/menuview.vue'
 import deliverystaffview from '../components/order/deliverystaffview.vue'
 import cartview from '../components/user/cartview.vue'
 import makeorder from '../components/user/makeorder.vue'
+import deliverypush from '../components/order/deliverypush.vue'
+import myinfo from '../components/user/myinfo.vue'
+import myinfoedit from '../components/user/myinfoedit.vue'
+import mydashboard from '../components/user/mydashboard.vue'
 
 Vue.use(VueRouter)
 
@@ -27,7 +31,11 @@ const router = new VueRouter({
         { path: '/menuview', component: menuview },
         { path: '/deliverystaffview', component: deliverystaffview },
         { path: '/cartview', component: cartview },
-        { path: '/makeorder', component: makeorder }
+        { path: '/makeorder', component: makeorder },
+        { path: '/deliverypush', component: deliverypush },
+        { path: '/myinfo', component: myinfo },
+        { path: '/myinfoedit', component: myinfoedit },
+        { path: '/mydashboard', component: mydashboard }
       ]
     }
   ]

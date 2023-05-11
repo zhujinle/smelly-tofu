@@ -69,7 +69,8 @@ export default {
 
 <style lang="less" scoped>
 .login_container{
-    background-color: #2b4b6b;
+    background-image: url('https://js.peterpig.top/back.jpg');
+    background-size: cover;
     height: 100%;
 }
 .login_box{
@@ -85,11 +86,11 @@ export default {
     transform: translate(-50%,-50%);
     .Name{
       display: flex;
-      height: 20%;
+      height: 30%;
       align-items: center;
       justify-content: center;
-      padding: 10% 20%;
-      font-size: 3.5vw;
+      padding: 10% 10%;
+      font-size: 2.5vw;
     }
     .avatar_box{
         // weight: 130px;
