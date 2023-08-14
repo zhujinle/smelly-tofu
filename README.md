@@ -18,4 +18,4 @@ To-Do List 在[Project界面](https://github.com/users/zhujinle/projects/1/views
 
 [@13EG](https://github.com/13EG)负责文档书写Visio画图与前端界面编写
 
-本项目使用[WTFPL(Do What The Fuck You Want To Public License)](https://github.com/anak10thn/WTFPL)协议开源，Developing阶段使用Private仓库保证进度不受影响，完成后转为公共仓库。
+本项目使用GPLv3 ~~[WTFPL(Do What The Fuck You Want To Public License)](https://github.com/anak10thn/WTFPL)~~ 协议开源，Developing阶段使用Private仓库保证进度不受影响，完成后转为公共仓库。
