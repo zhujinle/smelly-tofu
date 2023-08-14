@@ -84,9 +84,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'smelly-tofu',
         'USER': 'smelly-tofu',
-        'PASSWORD': 'yNxrh5Kd7MxAEcKX',
-        'HOST': '1.117.52.175',
-        'PORT': '3306',
+        'PASSWORD': 'YOUR_PASSWORD',
+        'HOST': 'YOUR_DATABASE_HOST_IP',
+        'PORT': 'YOUR_DATABASE_HOST_PORT',
     }
 }
 
